@@ -1,9 +1,7 @@
 import sqlite3
+import logging
 
-config = dict()
-
-def ConsoleOutput(Info, Addition=None):
-    print 'LocalOrz' + (' ' + Addition if Addition else '') + '> ' + Info
+config = dict(dbpath="/LocalOrz.db", datapath="/data", srcpath="/src")
 
 def InitDatabase(Path):
     conn = sqlite3.connect(Path)
