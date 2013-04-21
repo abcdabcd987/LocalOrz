@@ -5,10 +5,13 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
   <title>{% block title %}{% end %}</title>
+  <link rel="stylesheet" href="{{ static_url('bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ static_url('bootstrap-responsive.min.css') }}">
   {% block head %}{% end %}
 </head>
 <body>
   {% block content %}{% end %}
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="{{ static_url('jquery-1.9.1.min.js') }}"></script>
+  <script src="{{ static_url('bootstrap.min.js') }}"></script>
   <script src="{{ static_url('test.js') }}"></script>
 </body>

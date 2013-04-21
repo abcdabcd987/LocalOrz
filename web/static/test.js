@@ -1,36 +1,3 @@
-$(document).ready(function() {
-  if (!window.console) window.console = {};
-  if (!window.console.log) window.console.log = function() {};
-
-  if ($("#updateform").length) {
-    $("#updateform").live("submit", function() {
-      newMessage($(this));
-      return false;
-    });
-    $("#updateform").live("keypress", function(e) {
-      if (e.keyCode == 13) {
-        newMessage($(this));
-        return false;
-      }
-    });
-  }
-  if ($("#message").length) {
-    $("#mesesage").select();
-  }
-  updater.poll();
-});
-
-function newMessage(form) {
-  var message = form.formToDict();
-  var disabled = form.find("input[type=submit]");
-  disabled.attr("disabled", "");
-  $.postJSON("/new", message, function(response) {
-    updater.showMessage(response);
-    form.find("input[type=text]").val("").select();
-    disabled.removeAttr("disabled");
-  });
-}
-
 $.postJSON = function(url, args, callback) {
   $.ajax({url: url, data: $.param(args), dataType: "text", type: "POST",success: function(response) {
     if (callback) callback(eval("(" + response + ")"));
@@ -49,45 +16,29 @@ $.fn.formToDict = function() {
   return json;
 };
 
-var updater = {
-  errorSleepTime: 500,
+$(document).ready(function() {
+  if (!window.console) window.console = {};
+  if (!window.console.log) window.console.log = function() {};
 
-  poll: function() {
-    var args = {};
-    $.ajax({url: "/update", type: "POST", dataType: "text",
-      data: $.param(args),
-      success: updater.onSuccess,
-      error: updater.onError});
-  },
-
-  onSuccess: function(response) {
-    try {
-      updater.newMessage(eval("(" + response + ")"));
-    } catch (e) {
-      updater.onError();
-      return;
+  $("#datapath").typeahead({
+    source: function (query, process) {
+      $.postJSON("/test/data", {datapath: query, action: "getList"}, function(response) {
+        process(response.dataList);
+      });
+    }, sorter: function (items) {
+      return items.sort();
     }
-    updater.errorSleepTime = 500;
-    window.setTimeout(updater.poll, 0);
-  },
+  });
+  $("#dataform").submit(function () {
+    $.postJSON("/test/data", {datapath: $("#datapath").val(), action: "getNext"}, function(response) {
+      $("#others li").remove();
+      for (var i = 0; i < response.otherData.length; ++i) {
+        $("#others").append($("<li>" + response.otherData[i] + "</li>"));
+      }
+    });
+    return false;
+  });
 
-  onError: function(response) {
-    updater.errorSleepTime *= 2;
-    console.log("Poll error; sleeping for", updater.errorSleepTime, "ms");
-    window.setTimeout(updater.poll, updater.errorSleepTime);
-  },
+ //var subjects = ['PHP', 'MySQL', 'SQL', 'PostgreSQL', 'HTML', 'CSS', 'HTML5', 'CSS3', 'JSON'];   
+});
 
-  newMessage: function(response) {
-    if (!response.message) return;
-    var message = response.message;
-    console.log("new messages");
-    updater.showMessage(message);
-  },
-
-  showMessage: function(message) {
-    var node = $(message);
-    node.hide();
-    $("#inbox").append(node);
-    node.slideDown();
-  }
-};
