@@ -33,12 +33,47 @@ $(document).ready(function() {
     $.postJSON("/test/data", {datapath: $("#datapath").val(), action: "getNext"}, function(response) {
       $("#others li").remove();
       for (var i = 0; i < response.otherData.length; ++i) {
-        $("#others").append($("<li>" + response.otherData[i] + "</li>"));
+        $("#others").append("<li>" + response.otherData[i] + "</li>");
       }
     });
     return false;
   });
-
- //var subjects = ['PHP', 'MySQL', 'SQL', 'PostgreSQL', 'HTML', 'CSS', 'HTML5', 'CSS3', 'JSON'];   
+  $(".selectpicker").selectpicker("render");
+  $("#input-checker-extra").hide();
+  $("#input-checker-extra").css("margin-bottom", "10px");
+  $("#select-checker").change(function () {
+    var selection = parseInt($("#select-checker option:selected").val());
+    if (selection <= 1) {
+      $("#input-checker-extra").hide();
+    } else if (selection == 3) {
+      $("#input-checker-extra").val("").width("auto").show();
+      $("#input-checker-extra").data('typeahead', (data = null));
+      $("#input-checker-extra").typeahead({
+        source: function (query, process) {
+          $.postJSON("/test/data", {datapath: query, action: "getList"}, function(response) {
+            process(response.dataList);
+          });
+        }, sorter: function (items) {
+          return items.sort();
+        }
+      }).select();
+    } else {
+      $("#input-checker-extra").val("6").width("2em").show().off().select();
+    }
+  });
+  $("#btn-add-addition").click(function () {
+    var cnt = parseInt($("#hidden-addcnt").val());
+    $(this).before('<div><input type="text" id="input-add-' + cnt + '" name="addition" autocomplete="off" data-provide="typeahead"></div>');
+    $("#input-add-" + cnt).typeahead({
+        source: function (query, process) {
+          $.postJSON("/test/data", {datapath: query, action: "getList"}, function(response) {
+            process(response.dataList);
+          });
+        }, sorter: function (items) {
+          return items.sort();
+        }
+    }).select();
+    $("#hidden-addcnt").val(cnt+1);
+    return false;
+  });
 });
-

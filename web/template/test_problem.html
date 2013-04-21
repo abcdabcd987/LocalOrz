@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Test - problem{% end %}
+{% block content %}
+<h1>Test - problem</h1>
+<form action="#" method="post" id="problemform" class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label" for="input-name">Problem Name</label>
+    <div class="controls">
+      <input type="text" id="input-name" name="name" placeholder="Problem Name" autocomplete="off">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-filename">Filename</label>
+    <div class="controls">
+      <input type="text" id="input-filename" name="filename" placeholder="Filename" autocomplete="off">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="select-checker">Checker</label>
+    <div class="controls">
+      <select class="selectpicker" id="select-checker" name="checker" title="Select one of the following">
+        <option value="0" disabled>Select one of the following</option>
+        <option data-divider="true"></option>
+        <option value="1" data-subtext="(Ignore spaces at the end of a line or the file)">Normal string checker</option>
+        <option value="2" data-subtext="(Need to specify the precision)">Single float number checker</option>
+        <option value="3" data-subtext="(Need to specify the path to the checker)">Special Judge</option>
+      </select>
+      <input type="text" id="input-checker-extra" name="extra" autocomplete="off" data-provide="typeahead">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Addition Files</label>
+    <div class="controls" id="box-addition">
+      <button id="btn-add-addition" class="btn">Add a addition file</button>
+      <input type="hidden" id="hidden-addcnt" value="0">
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button id="btn-addprob" class="btn btn-primary">Add Problem</button>
+    </div>
+  </div>
+</form>
+<p>
+</p>
+{% end %}
