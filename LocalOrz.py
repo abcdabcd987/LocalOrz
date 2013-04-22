@@ -13,8 +13,9 @@ from web import web
 from orz import orz
 
 uri = [
-    (r'/test/data', web.testDataHandler),
     (r'/test/problem', web.testProblemHandler),
+    (r'/test/testcase', web.testTestcaseHandler),
+    (r'/test/ajax', web.testAjaxHandler)
 ]
 
 define("root", default=".", type=str, help="The path to the contest")
@@ -35,17 +36,19 @@ if __name__ == '__main__':
         logging.error(orz.config['root'] + " is supposed to have mask drx. Exit.")
         sys.exit(2)
 
-    if not os.access(orz.config['root'] + orz.config['dbpath'], os.F_OK):
-        logging.warning("Database doesn't exist. Created. ^_^")
-        orz.initDatabase(create=True)
-    else:
-        orz.initDatabase()
     if not os.access(orz.config['root'] + orz.config['datapath'], os.F_OK):
         os.mkdir(orz.config['root'] + orz.config['datapath'])
         logging.warning(orz.config['root'] + orz.config['datapath'] + " doesn't exist. Created. ^_^")
     if not os.access(orz.config['root'] + orz.config['srcpath'], os.F_OK):
         os.mkdir(orz.config['root'] + orz.config['srcpath'])
         logging.warning(orz.config['root'] + orz.config['srcpath'] + " doesn't exist. Created. ^_^")
+    if not os.access(orz.config['root'] + orz.config['dbpath'], os.F_OK):
+        logging.warning("Database doesn't exist. Created. ^_^")
+        orz.initDatabase(create=True)
+    else:
+        orz.initDatabase()
+    orz.updateData()
+    orz.updateProblem()
     
     application = tornado.web.Application(
         uri,

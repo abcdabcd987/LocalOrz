@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Test - testcase{% end %}
+{% block content %}
+<h1>Test - testcase</h1>
+<form action="#" method="post" id="testcaseform" class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label" for="select-problem">Problem</label>
+    <div class="controls">
+      <select class="selectpicker" id="select-problem" name="pid" title="Select one of the following">
+        <option value="0" disabled>Select one of the following</option>
+        <option data-divider="true"></option>
+      </select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-inputfile-0">Input File</label>
+    <div class="controls">
+      <div><input type="text" id="input-inputfile-0" name="inputs[]" placeholder="Input File" autocomplete="off" data-provide="typeahead"></div>
+      <button class="btn" id="btn-add-input">Add <strong>Addition</strong> Input File</button>
+    </div>
+    <input type="hidden" value="1" id="hidden-inputcnt">
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-inputfile">Output File</label>
+    <div class="controls">
+      <input type="text" id="input-outputfile" name="output" placeholder="Output File" autocomplete="off" data-provide="typeahead">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-score">Score</label>
+    <div class="controls">
+      <div class="input-append">
+        <input type="text" id="input-score" name="score" autocomplete="off" value="10">
+        <span class="add-on">pt</span>
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-time">Time Limit</label>
+    <div class="controls">
+      <div class="input-append">
+        <input type="text" id="input-time" name="time" autocomplete="off" value="1000">
+        <span class="add-on">ms</span>
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-memory">Memory Limit</label>
+    <div class="controls">
+      <div class="input-append">
+        <input type="text" id="input-memory" name="memory" autocomplete="off" value="262144">
+        <span class="add-on">kb</span>
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button id="btn-addtestcase" class="btn btn-primary" disabled>Add Testcase</button>
+      <button id="btn-addothercase" class="btn btn-success" disabled>Add Other Testcase</button>
+    </div>
+  </div>
+</form>
+<ul id="result">
+</ul>
+{% end %}
