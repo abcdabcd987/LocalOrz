@@ -43,4 +43,5 @@ class testProblemHandler(tornado.web.RequestHandler):
 class testTestcaseHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("test_testcase.html")
+        utils.getTestcases(orz.db, 1)
     

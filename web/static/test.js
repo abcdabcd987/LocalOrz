@@ -120,10 +120,8 @@ $(document).ready(function() {
     args['action'] = 'addTestcase';
     $(this).attr("disabled", "");
     $.postJSON("/test/ajax", args, function(response) {
-      for (var i = 0; i < response.testcaseList.length; ++i) {
-        var testcase = response.testcaseList[i];
-        $("#result").append("<li><code>" + testcase[0] + " | " + testcase[1] + ' | ' + testcase[2] + ' | ' + testcase[3] + ' | ' + testcase[4] + ' | ' + testcase[5] + '</code></li>');
-      }
+      $("#result").append("<li>success, see console.log</li>");
+      console.log(response);
       $("#btn-addothercase").removeAttr("disabled");
     });
   });
@@ -132,10 +130,8 @@ $(document).ready(function() {
     args['action'] = 'addOtherTestcase';
     $(this).attr("disabled", "");
     $.postJSON("/test/ajax", args, function(response) {
-      for (var i = 0; i < response.testcaseList.length; ++i) {
-        var testcase = response.testcaseList[i];
-        $("#result").append("<li><code>" + testcase[0] + " | " + testcase[1] + ' | ' + testcase[2] + ' | ' + testcase[3] + ' | ' + testcase[4] + ' | ' + testcase[5] + '</code></li>');
-      }
+      $("#result").append("<li>success, see console.log</li>");
+      console.log(response);
     });
   });
   $("#select-problem").change(function() {
