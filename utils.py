@@ -14,7 +14,7 @@ def getRandomString():
 def isFileExist(path):
     return os.access(path, os.F_OK)
 
-def getNextDataFile(path):
+def getNextTestcase(path):
     nextpath = reLastNumber.sub(lambda match: str(int(match.group(1))+1), path)
     return None if path == nextpath else nextpath
 

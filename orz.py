@@ -2,7 +2,8 @@ import utils
 import sqlite3
 import logging
 
-class Orz(object):
+
+class Orz:
     def __init__(self):
         self.config = dict(dbpath="/LocalOrz.db", datapath="/data", srcpath="/src")
         self.db = None
