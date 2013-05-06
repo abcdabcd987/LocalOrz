@@ -36,11 +36,11 @@ print(person)
 
 
 print('=============Save To File Test:')
-person.saveToFile(r'test\result.xml')
+person.saveToFile(r'test/result.xml')
 print(r"Done, see <test\result.xml>")
 
 
 print('=============Load From File Test:')
 person = PersonResult()
-person.loadFromFile(r'test\result.xml')
+person.loadFromFile(r'test/result.xml')
 print(person)

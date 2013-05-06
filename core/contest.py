@@ -1,3 +1,4 @@
+import os
 import copy
 import logging
 from xml.etree import ElementTree as ET
@@ -29,9 +30,12 @@ class Compiler:
         return 'title=%s|command=%s|executable=%s|extension=%s' % (repr(self.title), repr(self.command), repr(self.executable), repr(self.extension))
 
 class Contest:
-    def __init__(self, title):
+    def __init__(self, title, path):
         if not isinstance(title, str): raise TypeError('Contest.__init__: title is not a string')
+        if not isinstance(path, str): raise TypeError('Contest.__init__: path is not a string')
+        self.opened = False
         self.title = title
+        self.path = os.path.realpath(path)
         self.compiler = list()
         self.problem = list()
         self.person = list()
@@ -77,7 +81,7 @@ class Contest:
     def loadFromFile(self, filename):
         try:
             orz = ET.ElementTree(file=filename).getroot()
-            contest = Contest(orz.get('title'))
+            contest = Contest(orz.get('title'), self.path)
             for prob in orz.find('problems'):
                 problem = Problem(prob.get('title'), prob.get('filename'), prob.get('inputs').split('|'), prob.get('output'), prob.get('checker'), None if prob.get('checkerArg') == 'None' else prob.get('checkerArg'), prob.get('addition').split('|'))
                 for case in prob:
@@ -91,6 +95,42 @@ class Contest:
             self.compiler = contest.compiler
             self.title = contest.title
         except Exception as e:
-            logging.warning("File [%s] cannot be prased. Ignore this file. Expection: %s" % (filename, repr(e)))
+            logging.warning("File [%s] cannot be prased. Expection: %s" % (filename, repr(e)))
             return
+    def open(self):
+        try:
+            self.loadFromFile(os.path.join(self.path, 'data', 'dataconf.xml'))
+            if not os.path.exists(os.path.join(self.path, 'src')):
+                os.mkdir(os.path.join(self.path, 'src'))
+            with open(os.path.join(self.path, '.LocalOrz'), 'w') as f:
+                print(const.VERSION, file=f)
+            self.opened = True
+            return True
+        except:
+            self.opened = False
+            return False
+    def new(self):
+        try:
+            if not os.path.exists(self.path):
+                os.mkdir(self.path)
+            if not os.path.exists(os.path.join(self.path, 'data')):
+                os.mkdir(os.path.join(self.path, 'data'))
+            if not os.path.exists(os.path.join(self.path, 'src')):
+                os.mkdir(os.path.join(self.path, 'src'))
+            self.saveToFile(os.path.join(self.path, 'data', 'dataconf.xml'))
+            with open(os.path.join(self.path, '.LocalOrz'), 'w') as f:
+                print(const.VERSION, file=f)
+            self.open()
+        except:
+            logging.critical('Cannot create contest.')
+    def save(self):
+        self.saveToFile(os.path.join(self.path, 'data', 'dataconf.xml'))
+    def refreshPerson(self):
+        self.person = []
+        for name in os.listdir(os.path.join(self.path, 'src')):
+            if os.path.isdir(os.path.join(self.path, 'src', name)):
+                result = PersonResult()
+                result.loadFromFile(os.path.join(self.path, 'src', name, 'result.xml'))
+                person = Person(name, result)
+                self.appendPerson(person)
 

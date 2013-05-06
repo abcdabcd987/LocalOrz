@@ -77,15 +77,16 @@ class PersonResult:
         try:
             person = ET.ElementTree(file=filename)
             orz = person.getroot()
-            result = []
+            result = PersonResult(orz.get('judgetime'))
             for prob in orz:
                 problem = ProblemResult(prob.get('status'), prob.get('title'), prob.get('filename'), prob.get('detail'))
                 for case in prob:
                     testcase = TestcaseResult(case.get('status'), case.get('score'), case.get('time'), case.get('memory'), case.get('exitcode'), case.get('detail'))
                     problem.append(testcase)
                 result.append(problem)
-            self.__init__(orz.get('judgetime'))
-            self.result = copy.deepcopy(result)
+            self.result = result.result
+            self.score = result.score
+            self.time = result.time
         except Exception as e:
             logging.warning("File [%s] cannot be prased. Ignore this file. Expection: %s" % (filename, repr(e)))
             return
