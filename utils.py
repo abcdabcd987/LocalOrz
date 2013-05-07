@@ -24,7 +24,7 @@ def getDataFiles(datapath):
     res = []
     for dirpath, dirnames, filenames in os.walk(datapath):
         for filename in filenames:
-            res.append(os.path.join(dirpath, filename).replace(datapath, '').decode('utf-8'))
+            res.append(os.path.join(dirpath, filename).replace(datapath, ''))
     return res
 
 def getMatchedDataFiles(path, data):

@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Test - Contest{% end %}
+{% block content %}
+<h1>Test - Contest</h1>
+<h2>Current Contest Information</h2>
+<pre>
+{{ contest }}
+</pre>
+<h2>New a Contest</h2>
+<form id="new-contest" method="post" action="/test/contest/new">
+  <input type="text" name="title" placeholder="Contest Title">
+  <input type="text" name="path" placeholder="Save To">
+  <div><input type="submit" value="New Contest" class="btn btn-primary"></div>
+</form>
+<h2>Open a Contest</h2>
+<form id="open-contest" method="post" action="/test/contest/open">
+  <input type="text" name="path" placeholder="Load From">
+  <div><input type="submit" value="Open Contest" class="btn btn-primary"></div>
+</form>
+<h2>Add a Compiler</h2>
+<form id="add-compiler" method="post" action="/test/contest/addcompiler">
+  <input type="text" name="title" placeholder="Compiler Title" value="GNU C++ Compiler">
+  <input type="text" name="extension" placeholder="Extension" value="cpp">
+  <input type="text" name="command" placeholder="Compile Command" value="g++ %s.cpp -o %s -Wall -Wextra">
+  <input type="text" name="executable" placeholder="Executable File" value="%s">
+  <div><input type="submit" value="Add Compiler" class="btn btn-primary"></div>
+</form>
+<h2>Add a Problem</h2>
+<form id="add-problem" method="post" action="/test/contest/addproblem">
+  <div><input type="text" name="title" placeholder="Problem Title"></div>
+  <div><input type="text" name="filename" placeholder="Filename"></div>
+  <div>
+    <input type="text" name="inputs[]" placeholder="Input Filename">
+    <button class="btn" id="btn-add-input">Add a Input File</button>
+  </div>
+  <div><input type="text" name="output" placeholder="Output Filename"></div>
+  <div>
+    <select class="selectpicker" id="select-checker" name="checker" title="Select a checker">
+      <option disabled>Select a checker</option>
+      <option data-divider="true"></option>
+      <option value="Normal Judge" data-subtext="(Ignore spaces at the end of a line or the file)">Normal string checker</option>
+      <option value="Float Judge" data-subtext="(Need to specify the precision)">Single float number checker</option>
+      <option value="Special Judge" data-subtext="(Need to specify the path to the checker)">Special Judge</option>
+    </select>
+    <input type="text" id="input-checker-extra" name="checkerArg" autocomplete="off" data-provide="typeahead" style="display: none;">
+  </div>
+  <div><button class="btn" id="btn-add-addition">Add a Addition File</button></div>
+  <div><input type="submit" value="Add Problem" class="btn btn-primary"></div>
+</form>
+{% end %}
+{% block jquery %}
+<script>
+$.postJSON = function(url, args, callback) {
+  $.ajax({url: url, data: $.param(args), dataType: "text", type: "POST", success: function(response) {
+    if (callback) callback(eval("(" + response + ")"));
+  }, error: function(response) {
+    console.log("ERROR:", response)
+  }});
+};
+
+$(window).ready(function() {
+  $("#btn-add-input").click(function() {
+    $(this).before('<input type="text" name="inputs[]" placeholder="Input Filename">');
+    return false;
+  });
+  $("#btn-add-addition").click(function() {
+    $(this).before($('<input type="text" name="addition[]" placeholder="Addition Filename" class="typeahead-data" autocomplete="off" data-provide="typeahead">').typeahead({
+        source: function (query, process) {
+          $.postJSON("/test/ajax", {datapath: query, action: "getDataFiles"}, function(response) {
+            process(response.dataList);
+          });
+        }, sorter: function (items) {
+          return items.sort();
+        }, items: 40
+      })
+    );
+    return false;
+  });
+  $("#select-checker").change(function () {
+    var selection = $("#select-checker option:selected").val();
+    if (selection == 'Normal Judge') {
+      $("#input-checker-extra").hide();
+    } else if (selection == 'Special Judge') {
+      $("#input-checker-extra").val("").width("auto").show();
+      $("#input-checker-extra").data('typeahead', (data = null));
+      $("#input-checker-extra").typeahead({
+        source: function (query, process) {
+          $.postJSON("/test/ajax", {datapath: query, action: "getDataFiles"}, function(response) {
+            process(response.dataList);
+          });
+        }, sorter: function (items) {
+          return items.sort();
+        }, items: 40
+      }).select();
+    } else {
+      $("#input-checker-extra").val("6").width("2em").show().off().select();
+    }
+  });
+  $(".selectpicker").selectpicker("render");
+});
+</script>
+{% end %}

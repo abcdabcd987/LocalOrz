@@ -105,6 +105,7 @@ class Contest:
             with open(os.path.join(self.path, '.LocalOrz'), 'w') as f:
                 print(const.VERSION, file=f)
             self.opened = True
+            self.refreshPerson()
             return True
         except:
             self.opened = False
@@ -117,14 +118,14 @@ class Contest:
                 os.mkdir(os.path.join(self.path, 'data'))
             if not os.path.exists(os.path.join(self.path, 'src')):
                 os.mkdir(os.path.join(self.path, 'src'))
-            self.saveToFile(os.path.join(self.path, 'data', 'dataconf.xml'))
-            with open(os.path.join(self.path, '.LocalOrz'), 'w') as f:
-                print(const.VERSION, file=f)
+            self.save()
             self.open()
         except:
             logging.critical('Cannot create contest.')
     def save(self):
         self.saveToFile(os.path.join(self.path, 'data', 'dataconf.xml'))
+        with open(os.path.join(self.path, '.LocalOrz'), 'w') as f:
+            print(const.VERSION, file=f)
     def refreshPerson(self):
         self.person = []
         for name in os.listdir(os.path.join(self.path, 'src')):
