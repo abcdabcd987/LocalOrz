@@ -40,7 +40,7 @@ class Contest:
         self.problem = list()
         self.person = list()
     def __repr__(self):
-        res = 'title=%s|compiler=[\n' % (repr(self.title), )
+        res = 'title=%s|path=%s|compiler=[\n' % (repr(self.title), repr(self.path))
         for compiler in self.compiler:
             res += '    ' + repr(compiler) + '\n'
         res += ']|problem=[\n'
@@ -83,7 +83,7 @@ class Contest:
             orz = ET.ElementTree(file=filename).getroot()
             contest = Contest(orz.get('title'), self.path)
             for prob in orz.find('problems'):
-                problem = Problem(prob.get('title'), prob.get('filename'), prob.get('inputs').split('|'), prob.get('output'), prob.get('checker'), None if prob.get('checkerArg') == 'None' else prob.get('checkerArg'), prob.get('addition').split('|'))
+                problem = Problem(prob.get('title'), prob.get('filename'), prob.get('inputs').split('|'), prob.get('output'), prob.get('checker'), prob.get('checkerArg'), list() if prob.get('addition').strip() == '' else prob.get('addition').split('|'))
                 for case in prob:
                     testcase = Testcase(case.get('inputs').split('|'), case.get('output'), case.get('timeLimit'), case.get('memoryLimit'), case.get('score'))
                     problem.appendTestcase(testcase)

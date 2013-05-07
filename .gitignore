@@ -1,3 +1,7 @@
+core/judge_client
+core/float_judge
+core/normal_judge
+
 *.py[cod]
 
 # Vim

@@ -1,3 +1,4 @@
+import os
 import copy
 
 import utils
@@ -16,14 +17,14 @@ class Testcase:
         return 'inputs=%s|output=%s|timeLimit=%s|memoryLimit=%s|score=%s' % (repr(self.inputs), repr(self.output), repr(self.timeLimit), repr(self.memoryLimit), repr(self.score))
 
 class Problem:
-    def __init__(self, title, filename, inputs, output, checker, checkerArg=None, addition=list()):
+    def __init__(self, title, filename, inputs, output, checker, checkerArg='', addition=list()):
         if not isinstance(title, str): raise TypeError('Problem.__init__: title is not a string')
         if not isinstance(filename, str): raise TypeError('Problem.__init__: filename is not a string')
         if not isinstance(inputs, list): raise TypeError('Problem.__init__: inputs is not a list')
         if not isinstance(output, str): raise TypeError('Problem.__init__: output is not a string')
         if not isinstance(addition, list): raise TypeError('Problem.__init__: addition is not a list')
         if checker not in const.CHECKER: raise TypeError('Problem.__init__: checker is invalid')
-        if checker != const.NORMAL_JUDGE and checkerArg is None: raise TypeError('Problem.__init__: checkerArg is None')
+        if not isinstance(checkerArg, str): raise TypeError('Problem.__init__: checkerArg is not a string')
         self.title = title
         self.filename = filename
         self.inputs = copy.deepcopy(inputs)
@@ -40,12 +41,24 @@ class Problem:
         return res
     def appendTestcase(self, testcase):
         self.testcase.append(copy.deepcopy(testcase))
-    def appendNextTestcase(self):
+    def appendNextTestcase(self, prefix=None):
         if not self.testcase:
-            return
+            return False
         last = self.testcase[-1]
         inputs = [utils.getNextTestcase(path) for path in last.inputs]
         output = utils.getNextTestcase(last.output)
         testcase = Testcase(inputs, output, last.timeLimit, last.memoryLimit, last.score)
+        if prefix is not None:
+            if not os.path.exists(os.path.join(prefix, output)):
+                return False
+            for path in inputs:
+                if not os.path.exists(os.path.join(prefix, path)):
+                    return False
         self.testcase.append(testcase)
+        return True
+    def autoAppendTestcase(self, prefix):
+        cnt = 0
+        while self.appendNextTestcase(prefix):
+            cnt += 1
+        return cnt
 
