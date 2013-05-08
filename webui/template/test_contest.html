@@ -2,10 +2,6 @@
 {% block title %}Test - Contest{% end %}
 {% block content %}
 <h1>Test - Contest</h1>
-<h2>Current Contest Information</h2>
-<pre>
-{{ contest }}
-</pre>
 <h2>New a Contest</h2>
 <form id="new-contest" method="post" action="/test/contest/new">
   <input type="text" name="title" placeholder="Contest Title">
@@ -47,56 +43,70 @@
   <div><button class="btn" id="btn-add-addition">Add a Addition File</button></div>
   <div><input type="submit" value="Add Problem" class="btn btn-primary"></div>
 </form>
+<h2>Add Testcase</h2>
+<form action="#" method="post" id="add-testcase" class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label" for="select-problem">Problem</label>
+    <div class="controls">
+      <select class="selectpicker" id="select-problem" name="pid" title="Select one of the following">
+        <option value="0" disabled>Select one of the following</option>
+        <option data-divider="true"></option>
+      </select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-inputfile-0">Input File</label>
+    <div class="controls">
+      <div><input type="text" id="input-inputfile-0" name="inputs[]" placeholder="Input File Path" autocomplete="off" data-provide="typeahead" class="typeahead-data"></div>
+      <button class="btn" id="btn-testcase-add-input">Add <strong>Addition</strong> Input File</button>
+    </div>
+    <input type="hidden" value="1" id="hidden-inputcnt">
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-inputfile">Output File</label>
+    <div class="controls">
+      <input type="text" id="input-outputfile" name="output" placeholder="Output File" autocomplete="off" data-provide="typeahead" class="typeahead-data">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-score">Score</label>
+    <div class="controls">
+      <div class="input-append">
+        <input type="text" id="input-score" name="score" autocomplete="off" value="10">
+        <span class="add-on">pt</span>
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-time">Time Limit</label>
+    <div class="controls">
+      <div class="input-append">
+        <input type="text" id="input-time" name="time" autocomplete="off" value="1000">
+        <span class="add-on">ms</span>
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-memory">Memory Limit</label>
+    <div class="controls">
+      <div class="input-append">
+        <input type="text" id="input-memory" name="memory" autocomplete="off" value="262144">
+        <span class="add-on">kb</span>
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button id="btn-addtestcase" class="btn btn-primary" disabled>Add Testcase</button>
+      <button id="btn-addothercase" class="btn btn-success" disabled>Add Other Testcase</button>
+    </div>
+  </div>
+</form>
+<h2>Current Contest Information</h2>
+<pre id="current-contest">
+{{ contest }}
+</pre>
 {% end %}
 {% block jquery %}
-<script>
-$.postJSON = function(url, args, callback) {
-  $.ajax({url: url, data: $.param(args), dataType: "text", type: "POST", success: function(response) {
-    if (callback) callback(eval("(" + response + ")"));
-  }, error: function(response) {
-    console.log("ERROR:", response)
-  }});
-};
-
-$(window).ready(function() {
-  $("#btn-add-input").click(function() {
-    $(this).before('<input type="text" name="inputs[]" placeholder="Input Filename">');
-    return false;
-  });
-  $("#btn-add-addition").click(function() {
-    $(this).before($('<input type="text" name="addition[]" placeholder="Addition Filename" class="typeahead-data" autocomplete="off" data-provide="typeahead">').typeahead({
-        source: function (query, process) {
-          $.postJSON("/test/ajax", {datapath: query, action: "getDataFiles"}, function(response) {
-            process(response.dataList);
-          });
-        }, sorter: function (items) {
-          return items.sort();
-        }, items: 40
-      })
-    );
-    return false;
-  });
-  $("#select-checker").change(function () {
-    var selection = $("#select-checker option:selected").val();
-    if (selection == 'Normal Judge') {
-      $("#input-checker-extra").hide();
-    } else if (selection == 'Special Judge') {
-      $("#input-checker-extra").val("").width("auto").show();
-      $("#input-checker-extra").data('typeahead', (data = null));
-      $("#input-checker-extra").typeahead({
-        source: function (query, process) {
-          $.postJSON("/test/ajax", {datapath: query, action: "getDataFiles"}, function(response) {
-            process(response.dataList);
-          });
-        }, sorter: function (items) {
-          return items.sort();
-        }, items: 40
-      }).select();
-    } else {
-      $("#input-checker-extra").val("6").width("2em").show().off().select();
-    }
-  });
-  $(".selectpicker").selectpicker("render");
-});
-</script>
+<script src="{{ static_url('test.js') }}"></script>
 {% end %}

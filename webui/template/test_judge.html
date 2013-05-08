@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Test - Judge{% end %}
+{% block content %}
+<h1>Test - Judge</h1>
+<button id="start-judge" class="btn">Judge All</button>
+<pre id="judge-info">
+</pre>
+{% end %}
+{% block jquery %}
+<script src="{{ static_url('test.js') }}"></script>
+<script>
+setJudge();
+</script>
+{% end %}

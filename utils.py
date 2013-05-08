@@ -22,6 +22,7 @@ def getNextTestcase(path):
 
 def getDataFiles(datapath):
     res = []
+    datapath += '/'
     for dirpath, dirnames, filenames in os.walk(datapath):
         for filename in filenames:
             res.append(os.path.join(dirpath, filename).replace(datapath, ''))

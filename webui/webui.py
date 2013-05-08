@@ -15,6 +15,8 @@ uri = [
     (r'/test/contest', controller.testContestHandler),
     (r'/test/contest/+(.*)', controller.testContestHandler),
     (r'/test/ajax', controller.testAjaxHandler),
+    (r'/test/person', controller.testPersonHandler),
+    (r'/test/judge', controller.testJudgeHandler),
 ]
 
 #logging.getLogger("tornado").setLevel(logging.CRITICAL)

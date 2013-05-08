@@ -35,7 +35,7 @@ $(document).ready(function() {
   $("#select-checker").change(function () {
     var selection = $("#select-checker option:selected").val();
     if (selection == 'standard') {
-      $("#input-checker-extra").hide();
+      $("#input-checker-extra").val("").hide();
     } else if (selection == 'special') {
       $("#input-checker-extra").val("").width("auto").show();
       $("#input-checker-extra").data('typeahead', (data = null));
@@ -52,28 +52,13 @@ $(document).ready(function() {
       $("#input-checker-extra").val("6").width("2em").show().off().select();
     }
   });
-  $("#btn-add-addition").click(function () {
-    var cnt = parseInt($("#hidden-addcnt").val());
-    $(this).before('<div><input type="text" id="input-add-' + cnt + '" name="addition[]" autocomplete="off" data-provide="typeahead"></div>');
-    $("#input-add-" + cnt).typeahead({
-        source: function (query, process) {
-          $.postJSON("/test/ajax", {datapath: query, action: "getDataFiles"}, function(response) {
-            process(response.dataList);
-          });
-        }, sorter: function (items) {
-          return items.sort();
-        }, items: 40
-    }).select();
-    $("#hidden-addcnt").val(cnt+1);
-    return false;
-  });
-  $('#btn-addprob').click(function () {
-    var args = $("#problemform").formToDict();
-    args['action'] = 'addProblem';
-    $.postJSON("/test/ajax", args, function(response) {
-      $("#status").append("<code>" + response.status + "</code>");
-    });
-  });
+  //$('#btn-addprob').click(function () {
+  //  var args = $("#problemform").formToDict();
+  //  args['action'] = 'addProblem';
+  //  $.postJSON("/test/ajax", args, function(response) {
+  //    $("#status").append("<code>" + response.status + "</code>");
+  //  });
+  //});
 
 //------testTestcase
   $.postJSON("/test/ajax", {action: 'getProblems'}, function(response) {
@@ -82,28 +67,8 @@ $(document).ready(function() {
       $("<option>").val(prob.id).text(prob.name).appendTo($("#select-problem"));
     }
   });
-  $("#input-inputfile-0").typeahead({
-    source: function (query, process) {
-      $.postJSON("/test/ajax", {datapath: query, action: "getDataFiles"}, function(response) {
-        process(response.dataList);
-      });
-    }, sorter: function (items) {
-      return items.sort();
-    }, items: 40
-  });
-  $("#input-outputfile").typeahead({
-    source: function (query, process) {
-      $.postJSON("/test/ajax", {datapath: query, action: "getDataFiles"}, function(response) {
-        process(response.dataList);
-      });
-    }, sorter: function (items) {
-      return items.sort();
-    }, items: 40
-  });
-  $("#btn-add-input").click(function () {
-    var cnt = parseInt($("#hidden-inputcnt").val());
-    $(this).before('<div><input type="text" id="input-inputfile-' + cnt + '" name="inputs[]" autocomplete="off" data-provide="typeahead" placeholder="Addition Input File"></div>');
-    $("#input-inputfile-" + cnt).typeahead({
+  $("#btn-testcase-add-input").click(function() {
+    $(this).before($('<div><input type="text" name="inputs[]" placeholder="Input File Path" class="typeahead-data" autocomplete="off" data-provide="typeahead" class="typeahead-data"></div>').typeahead({
         source: function (query, process) {
           $.postJSON("/test/ajax", {datapath: query, action: "getDataFiles"}, function(response) {
             process(response.dataList);
@@ -111,35 +76,134 @@ $(document).ready(function() {
         }, sorter: function (items) {
           return items.sort();
         }, items: 40
-    }).select();
-    $("#hidden-inputcnt").val(cnt+1);
+      })
+    );
     return false;
   });
   $("#btn-addtestcase").click(function () {
-    var args = $("#testcaseform").formToDict();
+    var args = $("#add-testcase").formToDict();
     args['action'] = 'addTestcase';
-    $(this).attr("disabled", "");
     $.postJSON("/test/ajax", args, function(response) {
-      $("#result").append("<li>success, see console.log</li>");
-      console.log(response);
-      $("#btn-addothercase").removeAttr("disabled");
+      $("#current-contest").fadeOut().text(response.current).fadeIn();
     });
+    return false;
   });
   $("#btn-addothercase").click(function () {
-    var args = $("#testcaseform").formToDict();
+    var args = $("#add-testcase").formToDict();
     args['action'] = 'addOtherTestcase';
-    $(this).attr("disabled", "");
     $.postJSON("/test/ajax", args, function(response) {
-      $("#result").append("<li>success, see console.log</li>");
-      console.log(response);
+      $("#current-contest").fadeOut().text(response.current).fadeIn();
     });
+    return false;
   });
   $("#select-problem").change(function() {
     $("#btn-addtestcase").removeAttr("disabled");
-    $("#btn-addothercase").attr("disabled", "");
+    $("#btn-addothercase").removeAttr("disabled");
   });
+  $("#btn-add-input").click(function() {
+    $(this).before('<input type="text" name="inputs[]" placeholder="Input Filename">');
+    return false;
+  });
+  $("#btn-add-addition").click(function() {
+    $(this).before($('<input type="text" name="addition[]" placeholder="Addition Filename" class="typeahead-data" autocomplete="off" data-provide="typeahead">').typeahead({
+        source: function (query, process) {
+          $.postJSON("/test/ajax", {datapath: query, action: "getDataFiles"}, function(response) {
+            process(response.dataList);
+          });
+        }, sorter: function (items) {
+          return items.sort();
+        }, items: 40
+      })
+    );
+    return false;
+  });
+  $("#select-checker").change(function () {
+    var selection = $("#select-checker option:selected").val();
+    if (selection == 'Normal Judge') {
+      $("#input-checker-extra").hide();
+    } else if (selection == 'Special Judge') {
+      $("#input-checker-extra").val("").width("auto").show();
+      $("#input-checker-extra").data('typeahead', (data = null));
+      $("#input-checker-extra").typeahead({
+        source: function (query, process) {
+          $.postJSON("/test/ajax", {datapath: query, action: "getDataFiles"}, function(response) {
+            process(response.dataList);
+          });
+        }, sorter: function (items) {
+          return items.sort();
+        }, items: 40
+      }).select();
+    } else {
+      $("#input-checker-extra").val("6").width("2em").show().off().select();
+    }
+  });
+  $(".typeahead-data").typeahead({
+    source: function (query, process) {
+      $.postJSON("/test/ajax", {datapath: query, action: "getDataFiles"}, function(response) {
+        process(response.dataList);
+      });
+    }, sorter: function (items) {
+      return items.sort();
+    }, items: 40
+  });
+
 
 //------bootstrap-select
   $(".selectpicker").selectpicker("render");
-  $("form").submit(function() { return false; });
+
+
+
+
+
 });
+
+function refreshPeople() {
+  $.postJSON("/test/ajax", {action: 'getPeople'}, function(response) {
+    $("#people-table").html("");
+    for (var i = 0; i < response.people.length; ++i) {
+      var people = response.people[i];
+      $("<tr><td>" + people.id + "</td><td>" + people.name + "</td><td>" + people.score + "</td><td>" + people.time + "</td></tr>").appendTo($("#people-table"));
+    }
+  });
+}
+
+function setJudge() {
+  $("#start-judge").click(function() {
+    $.postJSON("/test/ajax", {action: 'judgeAll'}, function(response) {
+      $(this).attr("disabled", "");
+    });
+  });
+  var updater = {
+    errorSleepTime: 500,
+
+    poll: function() {
+      $.ajax({url: "/test/judge", type: "POST", dataType: "text", success: updater.onSuccess, error: updater.onError});
+    },
+    
+    onSuccess: function(response) {
+      try {
+        updater.newMessage(eval("(" + response + ")"));
+      } catch (e) {
+        updater.onError();
+        return;
+      }
+      updater.errorSleepTime = 500;
+      window.setTimeout(updater.poll, 0);
+    },
+
+    onError: function(response) {
+      updater.errorSleepTime *= 2;
+      console.log("Poll error; sleeping for", updater.errorSleepTime, "ms");
+      window.setTimeout(updater.poll, updater.errorSleepTime);
+    },
+
+    newMessage: function(response) {
+      var message = response.message;
+      if (!message) return;
+      var judge_info = $("#judge-info");
+      judge_info.text(judge_info.text() + message);
+      $(window).scrollTop(1000000);
+    },
+  };
+  updater.poll();
+}
