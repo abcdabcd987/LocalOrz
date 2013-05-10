@@ -157,12 +157,42 @@ $(document).ready(function() {
 
 });
 
+function showPersonResult(response) {
+    console.log(response);
+  var person_result = $("#person-result");
+  person_result.html("");
+  for (var i = 0; i < response.problem.length; ++i) {
+    var problem = response.problem[i];
+    var tbody = $('<tbody></tbody>');
+    for (var j = 0; j < problem.testcase.length; ++j) {
+      var testcase = problem.testcase[j];
+      $('<tr><td>' + (j+1) + '</td><td>' + testcase.status + '<a class="data-detail" data-detail="' + testcase.detail + '" href="#">(?)</a></td><td>' + testcase.score + '</td><td>' + testcase.time + 'ms</td><td>' + testcase.memory + 'KB</td></tr>').appendTo(tbody);
+    }
+    var wrapper = $('<div></div>');
+    var table = $('<table class="table table-hover"></table>');
+    $('<p style="font-family:monospace;">Title: ' + problem.title + ' | Status: ' + problem.status + '<a class="data-detail" data-detail="' + problem.detail + '" href="#">(?)</a> | Filename: ' + problem.filename + ' | Total Time: ' + problem.time + 'ms | Score: ' + problem.score + '</p>').appendTo(wrapper);
+    $('<thead><tr><td>#</td><td>Status</td><td>Score</td><td>Time</td><td>Memory</td></thead>').appendTo(table);
+    tbody.appendTo(table);
+    table.appendTo(wrapper);
+    wrapper.appendTo(person_result);
+  }
+  $(".data-detail").click(function() {
+    alert($(this).attr("data-detail"));
+  });
+}
+
 function refreshPeople() {
   $.postJSON("/test/ajax", {action: 'getPeople'}, function(response) {
     $("#people-table").html("");
-    for (var i = 0; i < response.people.length; ++i) {
+    for (i = 0; i < response.people.length; ++i) {
       var people = response.people[i];
-      $("<tr><td>" + people.id + "</td><td>" + people.name + "</td><td>" + people.score + "</td><td>" + people.time + "</td></tr>").appendTo($("#people-table"));
+      $("<tr data-person-id=\"" + i + "\"><td>" + people.id + "</td><td>" + people.name + "</td><td>" + people.score + "</td><td>" + people.time + "</td></tr>")
+        .click(function() {
+          $.postJSON('/test/ajax', {action: 'getPersonResult', personid: $(this).attr("data-person-id")}, function(response) {
+            showPersonResult(response);
+          });
+        })
+        .appendTo($("#people-table"));
     }
   });
 }

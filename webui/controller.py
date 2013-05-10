@@ -15,16 +15,26 @@ class MessageBuffer:
         self.waiters = set()
         self.cache = []
     def wait(self, callback):
+        global mutex
+        mutex.acquire()
         self.waiters.add(callback)
+        mutex.release()
     def cancel(self, callback):
-        self.watiers.remove(callback)
+        global mutex
+        mutex.acquire()
+        self.waiters.remove(callback)
+        mutex.release()
     def send(self, message):
+        global mutex
+        mutex.acquire()
         for callback in self.waiters:
             callback(message)
         self.waiters = set()
+        mutex.release()
         sleep(0.1)
 
 message_buffer = MessageBuffer()
+mutex = threading.Lock()
 
 def runJudge():
     def cbCopy(msg):
@@ -87,6 +97,15 @@ class testAjaxHandler(tornado.web.RequestHandler):
             for index, person in enumerate(orz.person):
                 res.append(dict(id=index, name=person.name, score=person.result.score, time=person.result.time))
             self.write(dict(people=res))
+        elif action == 'getPersonResult':
+            personid = int(self.get_argument('personid'))
+            problem = []
+            for prob in orz.person[personid].result:
+                testcase = []
+                for case in prob.result:
+                    testcase.append(dict(status=case.status, score=case.score, time=case.time, memory=case.memory, exitcode=case.exitcode, detail=case.detail))
+                problem.append(dict(status=prob.status, title=prob.title, filename=prob.filename, detail=prob.detail, time=prob.time, score=prob.score, testcase=testcase))
+            self.write(dict(problem=problem))
         elif action == 'judgeAll':
             threading.Thread(target=runJudge).start()
             self.write(dict(status='Got'))
