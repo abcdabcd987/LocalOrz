@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block title %}Test - Contest{% end %}
+{% block content %}
+<h1>Test - Contest</h1>
+<h2>New a Contest</h2>
+<form id="new-contest" method="post" action="/test/contest/new">
+  <input type="text" name="title" placeholder="Contest Title">
+  <input type="text" name="path" placeholder="Save To">
+  <div><input type="submit" value="New Contest" class="btn btn-primary"></div>
+</form>
+<h2>Open a Contest</h2>
+<form id="open-contest" method="post" action="/test/contest/open">
+  <input type="text" name="path" placeholder="Load From" value="/home/">
+  <div><input type="submit" value="Open Contest" class="btn btn-primary"></div>
+</form>
+<h2>Add a Compiler</h2>
+<form id="add-compiler" method="post" action="/test/contest/addcompiler">
+  <input type="text" name="title" placeholder="Compiler Title" value="GNU C++ Compiler">
+  <input type="text" name="extension" placeholder="Extension" value="cpp">
+  <input type="text" name="command" placeholder="Compile Command" value="g++ %s.cpp -o %s -Wall -Wextra">
+  <input type="text" name="executable" placeholder="Executable File" value="%s">
+  <div><input type="submit" value="Add Compiler" class="btn btn-primary"></div>
+</form>
+<h2>Add a Problem</h2>
+<form id="add-problem" method="post" action="/test/contest/addproblem">
+  <div><input type="text" name="title" placeholder="Problem Title"></div>
+  <div><input type="text" name="filename" placeholder="Filename"></div>
+  <div>
+    <input type="text" name="inputs[]" placeholder="Input Filename">
+    <button class="btn" id="btn-add-input">Add a Input File</button>
+  </div>
+  <div><input type="text" name="output" placeholder="Output Filename"></div>
+  <div>
+    <select class="selectpicker" id="select-checker" name="checker" title="Select a checker">
+      <option disabled>Select a checker</option>
+      <option data-divider="true"></option>
+      <option value="Normal Judge" data-subtext="(Ignore spaces at the end of a line or the file)">Normal string checker</option>
+      <option value="Float Judge" data-subtext="(Need to specify the precision)">Single float number checker</option>
+      <option value="Special Judge" data-subtext="(Need to specify the path to the checker)">Special Judge</option>
+    </select>
+    <input type="text" id="input-checker-extra" name="checkerArg" autocomplete="off" data-provide="typeahead" style="display: none;">
+  </div>
+  <div><button class="btn" id="btn-add-addition">Add a Addition File</button></div>
+  <div><input type="submit" value="Add Problem" class="btn btn-primary"></div>
+</form>
+<h2>Add Testcase</h2>
+<form action="#" method="post" id="add-testcase" class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label" for="select-problem">Problem</label>
+    <div class="controls">
+      <select class="selectpicker" id="select-problem" name="pid" title="Select one of the following">
+        <option value="0" disabled>Select one of the following</option>
+        <option data-divider="true"></option>
+      </select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-inputfile-0">Input File</label>
+    <div class="controls">
+      <div><input type="text" id="input-inputfile-0" name="inputs[]" placeholder="Input File Path" autocomplete="off" data-provide="typeahead" class="typeahead-data"></div>
+      <button class="btn" id="btn-testcase-add-input">Add <strong>Addition</strong> Input File</button>
+    </div>
+    <input type="hidden" value="1" id="hidden-inputcnt">
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-inputfile">Output File</label>
+    <div class="controls">
+      <input type="text" id="input-outputfile" name="output" placeholder="Output File" autocomplete="off" data-provide="typeahead" class="typeahead-data">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-score">Score</label>
+    <div class="controls">
+      <div class="input-append">
+        <input type="text" id="input-score" name="score" autocomplete="off" value="10">
+        <span class="add-on">pt</span>
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-time">Time Limit</label>
+    <div class="controls">
+      <div class="input-append">
+        <input type="text" id="input-time" name="time" autocomplete="off" value="1000">
+        <span class="add-on">ms</span>
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="input-memory">Memory Limit</label>
+    <div class="controls">
+      <div class="input-append">
+        <input type="text" id="input-memory" name="memory" autocomplete="off" value="262144">
+        <span class="add-on">kb</span>
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button id="btn-addtestcase" class="btn btn-primary" disabled>Add Testcase</button>
+      <button id="btn-addothercase" class="btn btn-success" disabled>Add Other Testcase</button>
+    </div>
+  </div>
+</form>
+<h2>Current Contest Information</h2>
+<pre id="current-contest">
+{{ contest }}
+</pre>
+{% end %}
+{% block jquery %}
+<script src="{{ static_url('test.js') }}"></script>
+{% end %}

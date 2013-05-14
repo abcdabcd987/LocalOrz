@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Test - Person{% end %}
+{% block content %}
+<h1>Test - Person</h1>
+<textarea id="judge-info" disabled style="font-family: monospace; height: 240px; width: 80%; overflow: hidden; font-size: 13px; line-height: 17px;">
+</textarea>
+<div id="person-result">
+</div>
+<button id="start-judge" class="btn">Judge All</button>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <td>#</td>
+      <td>Name</td>
+      <td>Score</td>
+      <td>Time</td>
+    </tr>
+  </thead>
+  <tbody id="people-table">
+  </tbody>
+</table>
+{% end %}
+{% block jquery %}
+<script src="{{ static_url('test.js') }}"></script>
+<script>
+  refreshPeople();
+  setJudge();
+  updater.poll();
+</script>
+{% end %}
