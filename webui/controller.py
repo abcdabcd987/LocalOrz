@@ -55,7 +55,9 @@ def runJudge():
         else:
             message_buffer.send(repr(result) + "\n")
     for person in orz.person:
-        for problem in orz.problem:
+        person.result.result = []
+        for pid, problem in enumerate(orz.problem):
+            result = ProblemResult(const.UNKNOWN, problem.title, '', '')
             for compiler in orz.compiler:
                 if os.path.exists(os.path.join(orz.path, 'src', person.name, problem.filename + '.' + compiler.extension)):
                     global testcaseNO
@@ -63,6 +65,8 @@ def runJudge():
                     message_buffer.send("============================Judging %s's %s===============================\n" % (person.name, problem.filename + '.' + compiler.extension))
                     result = judge.judge(orz.path, problem, person.name, compiler, cbCopy, cbCompile, cbTestcase)
                     break
+            person.result.append(result)
+        person.result.saveToFile(os.path.join(orz.path, 'src', person.name, 'result.xml'))
 
 class testAjaxHandler(tornado.web.RequestHandler):
     def post(self):

@@ -15,7 +15,7 @@ class TestcaseResult:
         self.exitcode = int(exitcode)
         self.detail = detail
     def __repr__(self):
-        return 'status=%s|score=%s|time=%s|memory=%s|exitcode=%s|detail=%s' % (repr(self.status), repr(self.score), repr(self.time), repr(self.memory), repr(self.exitcode), repr(self.detail))
+        return 'status=%s|score=%s|time=%sms|memory=%sKB|exitcode=%s|detail=%s' % (repr(self.status), repr(self.score), repr(self.time), repr(self.memory), repr(self.exitcode), repr(self.detail))
 
 class ProblemResult:
     def __init__(self, status, title, filename, detail):
