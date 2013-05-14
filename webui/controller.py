@@ -1,6 +1,7 @@
 from time import sleep
 import tornado.web
 import threading
+import copy
 
 import core
 from core import const
@@ -28,7 +29,7 @@ class MessageBuffer:
         global mutex
         mutex.acquire()
         for callback in self.waiters:
-            callback(message)
+            callback(dict(message=message))
         self.waiters = set()
         mutex.release()
         sleep(0.1)
@@ -36,27 +37,27 @@ class MessageBuffer:
 message_buffer = MessageBuffer()
 mutex = threading.Lock()
 
-def runJudge():
-    def cbCopy(msg):
-        if msg == 'Start':
-            message_buffer.send('    Copy source file & addition files...')
-        else:
-            message_buffer.send(msg + "\n")
-    def cbCompile(msg):
-        if msg == 'Start':
-            message_buffer.send('    Compile...')
-        else:
-            message_buffer.send(msg + "\n")
-    def cbTestcase(result, msg):
-        global testcaseNO
-        if msg == 'Start':
-            testcaseNO += 1
-            message_buffer.send('    [Testcase %d]' % testcaseNO)
-        else:
-            message_buffer.send(repr(result) + "\n")
+def cbCopy(msg):
+    if msg == 'Start':
+        message_buffer.send('    Copy source file & addition files...')
+    else:
+        message_buffer.send(msg + "\n")
+def cbCompile(msg):
+    if msg == 'Start':
+        message_buffer.send('    Compile...')
+    else:
+        message_buffer.send(msg + "\n")
+def cbTestcase(result, msg):
+    global testcaseNO
+    if msg == 'Start':
+        testcaseNO += 1
+        message_buffer.send('    [Testcase %d]' % testcaseNO)
+    else:
+        message_buffer.send(repr(result) + "\n")
+def judgeAll():
     for person in orz.person:
-        person.result.result = []
-        for pid, problem in enumerate(orz.problem):
+        person.result.clear()
+        for problem in orz.problem:
             result = ProblemResult(const.UNKNOWN, problem.title, '', '')
             for compiler in orz.compiler:
                 if os.path.exists(os.path.join(orz.path, 'src', person.name, problem.filename + '.' + compiler.extension)):
@@ -65,8 +66,26 @@ def runJudge():
                     message_buffer.send("============================Judging %s's %s===============================\n" % (person.name, problem.filename + '.' + compiler.extension))
                     result = judge.judge(orz.path, problem, person.name, compiler, cbCopy, cbCompile, cbTestcase)
                     break
+            message_buffer.send("Status=%s | Filename: %s | Total Time: %dms | Score: %d\n\n" % (result.status, result.filename, result.time, result.score))
             person.result.append(result)
         person.result.saveToFile(os.path.join(orz.path, 'src', person.name, 'result.xml'))
+    message_buffer.send(dict(message="!!RefreshPeople"))
+def judgeProblem(personid, problemid):
+    person = orz.person[personid]
+    problem = orz.problem[problemid]
+    result = ProblemResult(const.UNKNOWN, problem.title, '', '')
+    for compiler in orz.compiler:
+        if os.path.exists(os.path.join(orz.path, 'src', person.name, problem.filename + '.' + compiler.extension)):
+            global testcaseNO
+            testcaseNO = 0
+            message_buffer.send("============================Judging %s's %s===============================\n" % (person.name, problem.filename + '.' + compiler.extension))
+            result = judge.judge(orz.path, problem, person.name, compiler, cbCopy, cbCompile, cbTestcase)
+            break
+    message_buffer.send("Status=%s | Filename: %s | Total Time: %dms | Score: %d\n\n" % (result.status, result.filename, result.time, result.score))
+    person.result.update(problemid, result)
+    person.result.saveToFile(os.path.join(orz.path, 'src', person.name, 'result.xml'))
+    message_buffer.send(dict(message="!!RefreshPeople"))
+    message_buffer.send(dict(message="!!RefreshPerson", problemid=problemid, personid=personid))
 
 class testAjaxHandler(tornado.web.RequestHandler):
     def post(self):
@@ -109,9 +128,14 @@ class testAjaxHandler(tornado.web.RequestHandler):
                 for case in prob.result:
                     testcase.append(dict(status=case.status, score=case.score, time=case.time, memory=case.memory, exitcode=case.exitcode, detail=case.detail))
                 problem.append(dict(status=prob.status, title=prob.title, filename=prob.filename, detail=prob.detail, time=prob.time, score=prob.score, testcase=testcase))
-            self.write(dict(problem=problem))
+            self.write(dict(problem=problem, personid=personid))
         elif action == 'judgeAll':
-            threading.Thread(target=runJudge).start()
+            threading.Thread(target=judgeAll).start()
+            self.write(dict(status='Got'))
+        elif action == 'judgeProblem':
+            personid = self.get_argument('personid')
+            problemid = self.get_argument('problemid')
+            threading.Thread(target=lambda: judgeProblem(int(personid), int(problemid))).start()
             self.write(dict(status='Got'))
 
 class testContestHandler(tornado.web.RequestHandler):
@@ -161,7 +185,11 @@ class testJudgeHandler(tornado.web.RequestHandler):
     def on_new_message(self, message):
         if self.request.connection.stream.closed():
             return
-        self.finish(dict(message=message))
+        self.finish(message)
     def on_connection_close(self):
         message_buffer.cancel(self.on_new_message)
+
+class testIndexHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('test_index.html', version=const.VERSION)
 

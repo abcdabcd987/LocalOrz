@@ -59,8 +59,16 @@ class PersonResult:
             res += '\n'
         res += '}'
         return res
+    def clear(self):
+        self.time = self.score = 0
     def append(self, problemResult):
         self.result.append(copy.deepcopy(problemResult))
+        self.time += problemResult.time
+        self.score += problemResult.score
+    def update(self, probid, problemResult):
+        self.time -= problemResult.time
+        self.score -= problemResult.score
+        self.result.result[probid] = copy.deepcopy(problemResult)
         self.time += problemResult.time
         self.score += problemResult.score
     def saveToFile(self, filename):

@@ -158,7 +158,6 @@ $(document).ready(function() {
 });
 
 function showPersonResult(response) {
-    console.log(response);
   var person_result = $("#person-result");
   person_result.html("");
   for (var i = 0; i < response.problem.length; ++i) {
@@ -169,8 +168,8 @@ function showPersonResult(response) {
       $('<tr><td>' + (j+1) + '</td><td>' + testcase.status + '<a class="data-detail" data-detail="' + testcase.detail + '" href="#">(?)</a></td><td>' + testcase.score + '</td><td>' + testcase.time + 'ms</td><td>' + testcase.memory + 'KB</td></tr>').appendTo(tbody);
     }
     var wrapper = $('<div></div>');
-    var table = $('<table class="table table-hover"></table>');
-    $('<p style="font-family:monospace;">Title: ' + problem.title + ' | Status: ' + problem.status + '<a class="data-detail" data-detail="' + problem.detail + '" href="#">(?)</a> | Filename: ' + problem.filename + ' | Total Time: ' + problem.time + 'ms | Score: ' + problem.score + '</p>').appendTo(wrapper);
+    var table = $('<table class="table table-hover table-condensed"></table>');
+    $('<p style="font-family:monospace;">Title: ' + problem.title + ' | Status: ' + problem.status + '<a class="data-detail" data-detail="' + problem.detail + '" href="#">(?)</a> | Filename: ' + problem.filename + ' | Total Time: ' + problem.time + 'ms | Score: ' + problem.score + ' | <a href="#" data-problemid="' + i + '" data-personid="' + response.personid + '" class="data-judge-problem">Rejudge</a></p>').appendTo(wrapper);
     $('<thead><tr><td>#</td><td>Status</td><td>Score</td><td>Time</td><td>Memory</td></thead>').appendTo(table);
     tbody.appendTo(table);
     table.appendTo(wrapper);
@@ -178,6 +177,13 @@ function showPersonResult(response) {
   }
   $(".data-detail").click(function() {
     alert($(this).attr("data-detail"));
+    return false;
+  });
+  $(".data-judge-problem").click(function() {
+    $.postJSON("/test/ajax", {action: 'judgeProblem', personid: $(this).attr("data-personid"), problemid: $(this).attr("data-problemid")}, function(response) {
+      $("#person-result").html("Judging");
+    });
+    return false;
   });
 }
 
@@ -186,7 +192,7 @@ function refreshPeople() {
     $("#people-table").html("");
     for (i = 0; i < response.people.length; ++i) {
       var people = response.people[i];
-      $("<tr data-person-id=\"" + i + "\"><td>" + people.id + "</td><td>" + people.name + "</td><td>" + people.score + "</td><td>" + people.time + "</td></tr>")
+      $("<tr data-person-id=\"" + i + "\"><td>" + people.id + "</td><td>" + people.name + "</td><td>" + people.score + "</td><td>" + people.time + "ms</td></tr>")
         .click(function() {
           $.postJSON('/test/ajax', {action: 'getPersonResult', personid: $(this).attr("data-person-id")}, function(response) {
             showPersonResult(response);
@@ -197,43 +203,53 @@ function refreshPeople() {
   });
 }
 
+var updater = {
+  errorSleepTime: 500,
+
+  poll: function() {
+    $.ajax({url: "/test/judge", type: "POST", dataType: "text", success: updater.onSuccess, error: updater.onError});
+  },
+  
+  onSuccess: function(response) {
+    try {
+      updater.newMessage(eval("(" + response + ")"));
+    } catch (e) {
+      updater.onError();
+      return;
+    }
+    updater.errorSleepTime = 500;
+    window.setTimeout(updater.poll, 0);
+  },
+
+  onError: function(response) {
+    updater.errorSleepTime *= 2;
+    console.log("Poll error; sleeping for", updater.errorSleepTime, "ms");
+    window.setTimeout(updater.poll, updater.errorSleepTime);
+  },
+
+  newMessage: function(response) {
+    var message = response.message;
+    if (!message) return;
+    if (message.message === '!!RefreshPerson') {
+      $.postJSON('/test/ajax', {action: 'getPersonResult', personid: response.message.personid}, function(response) {
+        showPersonResult(response);
+      });
+    } else if (message.message === '!!RefreshPeople') {
+      $("#person-result").html("");
+      refreshPeople();
+    } else {
+      var judge_info = $("#judge-info");
+      judge_info.text(judge_info.text() + message);
+      judge_info.animate({
+          scrollTop:judge_info[0].scrollHeight - judge_info.height()
+      },50);
+    }
+  },
+};
 function setJudge() {
   $("#start-judge").click(function() {
     $.postJSON("/test/ajax", {action: 'judgeAll'}, function(response) {
-      $(this).attr("disabled", "");
+      $("#person-result").html("Judging");
     });
   });
-  var updater = {
-    errorSleepTime: 500,
-
-    poll: function() {
-      $.ajax({url: "/test/judge", type: "POST", dataType: "text", success: updater.onSuccess, error: updater.onError});
-    },
-    
-    onSuccess: function(response) {
-      try {
-        updater.newMessage(eval("(" + response + ")"));
-      } catch (e) {
-        updater.onError();
-        return;
-      }
-      updater.errorSleepTime = 500;
-      window.setTimeout(updater.poll, 0);
-    },
-
-    onError: function(response) {
-      updater.errorSleepTime *= 2;
-      console.log("Poll error; sleeping for", updater.errorSleepTime, "ms");
-      window.setTimeout(updater.poll, updater.errorSleepTime);
-    },
-
-    newMessage: function(response) {
-      var message = response.message;
-      if (!message) return;
-      var judge_info = $("#judge-info");
-      judge_info.text(judge_info.text() + message);
-      $(window).scrollTop(1000000);
-    },
-  };
-  updater.poll();
 }

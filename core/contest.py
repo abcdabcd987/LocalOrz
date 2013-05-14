@@ -133,5 +133,11 @@ class Contest:
                 result = PersonResult()
                 result.loadFromFile(os.path.join(self.path, 'src', name, 'result.xml'))
                 person = Person(name, result)
+                self.adjustPerson(person)
                 self.appendPerson(person)
+    def adjustPerson(self, person):
+        st, ed = len(person.result.result), len(self.problem)
+        for pid in range(st, ed):
+            problem = self.problem[pid]
+            person.append(ProblemResult(const.UNKNOWN, problem.title, '', ''))
 
