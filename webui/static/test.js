@@ -84,7 +84,9 @@ $(document).ready(function() {
     var args = $("#add-testcase").formToDict();
     args['action'] = 'addTestcase';
     $.postJSON("/test/ajax", args, function(response) {
-      $("#current-contest").fadeOut().text(response.current).fadeIn();
+      $("#current-contest").fadeOut(function() {
+        $(this).text(response.current).fadeIn();
+      });
     });
     return false;
   });
@@ -92,7 +94,9 @@ $(document).ready(function() {
     var args = $("#add-testcase").formToDict();
     args['action'] = 'addOtherTestcase';
     $.postJSON("/test/ajax", args, function(response) {
-      $("#current-contest").fadeOut().text(response.current).fadeIn();
+      $("#current-contest").fadeOut(function() {
+        $(this).text(response.current).fadeIn();
+      });
     });
     return false;
   });
@@ -159,47 +163,61 @@ $(document).ready(function() {
 
 function showPersonResult(response) {
   var person_result = $("#person-result");
-  person_result.html("");
-  for (var i = 0; i < response.problem.length; ++i) {
-    var problem = response.problem[i];
-    var tbody = $('<tbody></tbody>');
-    for (var j = 0; j < problem.testcase.length; ++j) {
-      var testcase = problem.testcase[j];
-      $('<tr><td>' + (j+1) + '</td><td>' + testcase.status + '<a class="data-detail" data-detail="' + testcase.detail + '" href="#">(?)</a></td><td>' + testcase.score + '</td><td>' + testcase.time + 'ms</td><td>' + testcase.memory + 'KB</td></tr>').appendTo(tbody);
+  person_result.slideUp(function() {
+    $(this).html("");
+    for (var i = 0; i < response.problem.length; ++i) {
+      var problem = response.problem[i];
+      var tbody = $('<tbody></tbody>');
+      for (var j = 0; j < problem.testcase.length; ++j) {
+        var testcase = problem.testcase[j];
+        $('<tr data-status="' + testcase.status + '"><td>' + (j+1) + '</td><td>' + testcase.status + '<a class="data-detail" data-detail="' + testcase.detail + '" href="#">(?)</a></td><td>' + testcase.score + '</td><td>' + testcase.time + 'ms</td><td>' + testcase.memory + 'KB</td></tr>').appendTo(tbody);
+      }
+      var wrapper = $('<div></div>');
+      var table = $('<table class="table table-hover table-condensed"></table>');
+      $('<p style="font-family:monospace;">Title: ' + problem.title + ' | Status: ' + problem.status + '<a class="data-detail" data-detail="' + problem.detail + '" href="#">(?)</a> | Filename: ' + problem.filename + ' | Total Time: ' + problem.time + 'ms | Score: ' + problem.score + ' | <a href="#" data-problemid="' + i + '" data-personid="' + response.personid + '" class="data-judge-problem">Rejudge</a></p>').appendTo(wrapper);
+      $('<thead><tr><td>#</td><td>Status</td><td>Score</td><td>Time</td><td>Memory</td></thead>').appendTo(table);
+      tbody.appendTo(table);
+      table.appendTo(wrapper);
+      wrapper.appendTo(person_result);
     }
-    var wrapper = $('<div></div>');
-    var table = $('<table class="table table-hover table-condensed"></table>');
-    $('<p style="font-family:monospace;">Title: ' + problem.title + ' | Status: ' + problem.status + '<a class="data-detail" data-detail="' + problem.detail + '" href="#">(?)</a> | Filename: ' + problem.filename + ' | Total Time: ' + problem.time + 'ms | Score: ' + problem.score + ' | <a href="#" data-problemid="' + i + '" data-personid="' + response.personid + '" class="data-judge-problem">Rejudge</a></p>').appendTo(wrapper);
-    $('<thead><tr><td>#</td><td>Status</td><td>Score</td><td>Time</td><td>Memory</td></thead>').appendTo(table);
-    tbody.appendTo(table);
-    table.appendTo(wrapper);
-    wrapper.appendTo(person_result);
-  }
-  $(".data-detail").click(function() {
-    alert($(this).attr("data-detail"));
-    return false;
-  });
-  $(".data-judge-problem").click(function() {
-    $.postJSON("/test/ajax", {action: 'judgeProblem', personid: $(this).attr("data-personid"), problemid: $(this).attr("data-problemid")}, function(response) {
-      $("#person-result").html("Judging");
+    $('#person-result tr[data-status="Accepted"]').addClass("alert alert-success");
+    $('#person-result tr[data-status="Partly Accepted"]').addClass("alert alert-success");
+    $('#person-result tr[data-status="Wrong Answer"]').addClass("alert alert-error");
+    $('#person-result tr[data-status="Runtime Error"]').addClass("alert alert-error");
+    $('#person-result tr[data-status="Time Limit Exceeded"]').addClass("alert");
+    $('#person-result tr[data-status="Memory Limit Exceeded"]').addClass("alert");
+    person_result.slideDown();
+    $(".data-detail").click(function() {
+      alert($(this).attr("data-detail"));
+      return false;
     });
-    return false;
+    $(".data-judge-problem").click(function() {
+      $.postJSON("/test/ajax", {action: 'judgeProblem', personid: $(this).attr("data-personid"), problemid: $(this).attr("data-problemid")}, function(response) {
+        $("#person-result").slideUp(function() {
+          $(this).html("Judging").slideDown();
+        });
+      });
+      return false;
+    });
   });
 }
 
 function refreshPeople() {
   $.postJSON("/test/ajax", {action: 'getPeople'}, function(response) {
-    $("#people-table").html("");
-    for (i = 0; i < response.people.length; ++i) {
-      var people = response.people[i];
-      $("<tr data-person-id=\"" + i + "\"><td>" + people.id + "</td><td>" + people.name + "</td><td>" + people.score + "</td><td>" + people.time + "ms</td></tr>")
-        .click(function() {
-          $.postJSON('/test/ajax', {action: 'getPersonResult', personid: $(this).attr("data-person-id")}, function(response) {
-            showPersonResult(response);
-          });
-        })
-        .appendTo($("#people-table"));
-    }
+    $("#people-table").slideUp(function() {
+      $(this).html("");
+      for (i = 0; i < response.people.length; ++i) {
+        var people = response.people[i];
+        $("<tr data-person-id=\"" + i + "\"><td>" + people.id + "</td><td>" + people.name + "</td><td>" + people.score + "</td><td>" + people.time + "ms</td></tr>")
+          .click(function() {
+            $.postJSON('/test/ajax', {action: 'getPersonResult', personid: $(this).attr("data-person-id")}, function(response) {
+              showPersonResult(response);
+            });
+          })
+          .appendTo($("#people-table"));
+      }
+      $(this).slideDown();
+    });
   });
 }
 
@@ -235,7 +253,9 @@ var updater = {
         showPersonResult(response);
       });
     } else if (message.message === '!!RefreshPeople') {
-      $("#person-result").html("");
+      $("#person-result").slideUp(function() {
+        $(this).html("");
+      });
       refreshPeople();
     } else {
       var judge_info = $("#judge-info");
@@ -249,7 +269,9 @@ var updater = {
 function setJudge() {
   $("#start-judge").click(function() {
     $.postJSON("/test/ajax", {action: 'judgeAll'}, function(response) {
-      $("#person-result").html("Judging");
+      $("#person-result").slideUp(function() {
+        $(this).html("Judging").slideDown();
+      });
     });
   });
 }

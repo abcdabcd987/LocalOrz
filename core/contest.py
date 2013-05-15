@@ -139,5 +139,5 @@ class Contest:
         st, ed = len(person.result.result), len(self.problem)
         for pid in range(st, ed):
             problem = self.problem[pid]
-            person.append(ProblemResult(const.UNKNOWN, problem.title, '', ''))
+            person.result.append(ProblemResult(const.UNKNOWN, problem.title, '', ''))
 

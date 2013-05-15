@@ -116,6 +116,7 @@ class testAjaxHandler(tornado.web.RequestHandler):
             orz.save()
             self.write(dict(current=repr(orz)))
         elif action == 'getPeople':
+            orz.refreshPerson()
             res = []
             for index, person in enumerate(orz.person):
                 res.append(dict(id=index, name=person.name, score=person.result.score, time=person.result.time))

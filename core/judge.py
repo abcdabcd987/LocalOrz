@@ -122,6 +122,7 @@ def judge(contestPath, problem, personName, compiler, callbackCopy=None, callbac
             diffSuccess, diffInfo, score = diff(const.NORMAL_JUDGE_PATH, testcase.score, os.path.join(contestPath, 'data', testcase.output), '%s "%s"' % (problem.checkerArg, problem.output))
         else:
             diffSuccess, diffInfo, score = diff(const.NORMAL_JUDGE_PATH, testcase.score, os.path.join(contestPath, 'data', testcase.output), problem.checkerArg)
+        testcaseResult.detail = diffInfo
         if not diffSuccess:
             testcaseResult.status = const.CHECKER_ERROR
             judgeResult.append(testcaseResult)
