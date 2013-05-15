@@ -52,13 +52,6 @@ $(document).ready(function() {
       $("#input-checker-extra").val("6").width("2em").show().off().select();
     }
   });
-  //$('#btn-addprob').click(function () {
-  //  var args = $("#problemform").formToDict();
-  //  args['action'] = 'addProblem';
-  //  $.postJSON("/test/ajax", args, function(response) {
-  //    $("#status").append("<code>" + response.status + "</code>");
-  //  });
-  //});
 
 //------testTestcase
   $.postJSON("/test/ajax", {action: 'getProblems'}, function(response) {
@@ -124,7 +117,7 @@ $(document).ready(function() {
   $("#select-checker").change(function () {
     var selection = $("#select-checker option:selected").val();
     if (selection == 'Normal Judge') {
-      $("#input-checker-extra").hide();
+      $("#input-checker-extra").val("").hide();
     } else if (selection == 'Special Judge') {
       $("#input-checker-extra").val("").width("auto").show();
       $("#input-checker-extra").data('typeahead', (data = null));
@@ -255,14 +248,12 @@ var updater = {
     } else if (message.message === '!!RefreshPeople') {
       $("#person-result").slideUp(function() {
         $(this).html("");
+        refreshPeople();
       });
-      refreshPeople();
     } else {
       var judge_info = $("#judge-info");
       judge_info.text(judge_info.text() + message);
-      judge_info.animate({
-          scrollTop:judge_info[0].scrollHeight - judge_info.height()
-      },50);
+      judge_info.scrollTop(judge_info[0].scrollHeight - judge_info.height());
     }
   },
 };
