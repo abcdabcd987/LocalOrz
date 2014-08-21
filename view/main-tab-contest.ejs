@@ -1,0 +1,60 @@
+<div id="alert" class="alert alert-danger" role="alert"></div>
+<% if (isOpened) { %>
+    <div class="page-header">
+      <h1>Contest: <small><%= title %></small>
+    </div>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="title" class="col-xs-2 control-label">Title</label>
+        <div class="col-xs-10">
+          <input type="text" class="form-control" id="title" placeholder="Title" value="<%= title %>">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-xs-10 col-xs-offset-2">
+          <button class="btn btn-primary" id="btn-update">Update!</button>
+        </div>
+      </div>
+    </form>
+<% } else { %>
+    <div class="page-header">
+      <h1>New Contest</h1>
+    </div>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="title" class="col-xs-2 control-label">Title</label>
+        <div class="col-xs-10">
+          <input type="text" class="form-control" id="title" placeholder="Title">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="title" class="col-xs-2 control-label">Save Path</label>
+        <div class="col-xs-10">
+          <input type="file" class="form-control" id="save-path" placeholder="Path to the directory" nwdirectory>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-xs-10 col-xs-offset-2">
+          <button class="btn btn-primary" id="btn-new">New!</button>
+        </div>
+      </div>
+    </form>
+  
+
+    <div class="page-header">
+      <h1>Open Contest</h1>
+    </div>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="title" class="col-xs-2 control-label">Path</label>
+        <div class="col-xs-10">
+          <input type="file" class="form-control" id="path" placeholder="Path to the directory" nwdirectory>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-xs-10 col-xs-offset-2">
+          <button class="btn btn-primary" id="btn-open">Open!</button>
+        </div>
+      </div>
+    </form>
+<% } %>

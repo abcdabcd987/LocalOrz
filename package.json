@@ -1,0 +1,12 @@
+{
+  "name": "LocalOrz",
+  "version": "0.0.1",
+  "description": "A simple local judge system for OI on Windows / Linux / OS X, in order to take place of Cena.",
+  "main": "main.html",
+  "author": "Lequn Chen",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^1.0.0",
+    "promise": "^5.0.0"
+  }
+}
