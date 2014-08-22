@@ -7,5 +7,9 @@ function load(filename) {
     return ejs.compile(str);
 }
 
-exports.mainNav        = load('main-nav');
-exports.mainTabContest = load('main-tab-contest');
+exports.mainNav              = load('main-nav');
+exports.mainTabContest       = load('main-tab-contest');
+exports.mainTabProblems      = load('main-tab-problems');
+exports.problemListBox       = load('problem-list-box');
+exports.problemModification  = load('problem-modification');
+exports.testcaseModification = load('testcase-modification');

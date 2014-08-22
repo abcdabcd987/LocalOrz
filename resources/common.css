@@ -3,6 +3,12 @@ html, body {
     height: 100%;
     min-width: 100%;
     min-height: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 #nav {
@@ -28,4 +34,27 @@ html, body {
 
 #alert {
     display: none;
+}
+
+#problem-list .problem-title {
+    padding-left: 10px;
+    font-weight: bold;
+}
+
+#problem-list .panel-body {
+    padding: 0;
+}
+
+#problem-list .panel-body .list-group {
+    margin: -1px;
+}
+
+#problem-list .panel-body .list-group .list-group-item:first-child {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+#problem-list .panel-body .list-group .list-group-item:last-child {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }

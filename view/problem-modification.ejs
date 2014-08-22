@@ -1,0 +1,51 @@
+<div class="page-header">
+  <h1>Problem: <small id="problem-header-title"><%= problem.title %></small></h1>
+</div>
+<form class="form-horizontal" role="form">
+  <input type="hidden" id="problem-id" value="<%= problemID %>">
+  <div class="form-group">
+    <label for="title" class="col-xs-4 control-label">Title</label>
+    <div class="col-xs-8">
+      <input type="text" class="form-control" id="title" placeholder="e.g. Fibonacci Problem" value="<%= problem.title %>">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="source" class="col-xs-4 control-label">Source Filename</label>
+    <div class="col-xs-8">
+      <input type="text" class="form-control" id="source" placeholder="e.g. fibonacci" value="<%= problem.source %>">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="input" class="col-xs-4 control-label">Input Filename</label>
+    <div class="col-xs-8">
+      <input type="text" class="form-control" id="input" placeholder="e.g. fibonacci.in" value="<%= problem.input %>">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="output" class="col-xs-4 control-label">Output Filename</label>
+    <div class="col-xs-8">
+      <input type="text" class="form-control" id="output" placeholder="e.g. fibonacci.out" value="<%= problem.output %>">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="comparison" class="col-xs-4 control-label">Comparison Method</label>
+    <div class="col-xs-8">
+      <select class="form-control" id="comparison">
+        <option value="<%= CONST.COMPARISON.IGNORE %>"<%= problem.comparison === CONST.COMPARISON.IGNORE ? ' selected' : '' %>>Ignore empty spaces and lines at the end of line and file.</option>
+        <option value="<%= CONST.COMPARISON.BYTE %>"<%= problem.comparison === CONST.COMPARISON.BYTE ? ' selected' : '' %>>Byte by byte</option>
+        <option value="<%= CONST.COMPARISON.SPJ %>"<%= problem.comparison === CONST.COMPARISON.SPJ ? ' selected' : '' %>>Special Judge</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="spj" class="col-xs-4 control-label">Path to Special Judge</label>
+    <div class="col-xs-8">
+      <input type="email" class="form-control" id="spj-path" placeholder="e.g. fibonacci/spj.exe" value="<%= problem.spj %>"<%= problem.comparison !== CONST.COMPARISON.SPJ ? ' disabled' : '' %>>
+    </div>
+  </div>
+</form>

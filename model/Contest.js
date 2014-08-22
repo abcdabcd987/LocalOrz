@@ -2,18 +2,25 @@ var path = require('path');
 var fs = require('fs');
 var Promise = require('promise');
 var CONST = require('../const');
+var Problem = require('./Problem');
 
 function Contest() {
     this.title = null;
     this.version = CONST.VERSION;
     this._path = null;
     this._isOpened = false;
+    this._problem = [];
 }
 
 Contest.prototype.toDict = function() {
     var dict = {};
     for (key in this) {
-        if (key[0] !== '_') {
+        if (key === '_problem') {
+            dict[key] = [];
+            for (item in this[key]) {
+                dict[key].push(item.toDict());
+            }
+        } else if (key[0] !== '_') {
             dict[key] = this[key];
         }
     }
@@ -22,7 +29,14 @@ Contest.prototype.toDict = function() {
 
 Contest.prototype.loadDict = function(dict) {
     for (key in dict) {
-        this[key] = dict[key];
+        if (key == '_problem') {
+            this[key] = [];
+            for (item in dict[key]) {
+                this[key].push((new Problem).loadDict(dict[key]));
+            }
+        } else {
+            this[key] = dict[key];
+        }
     }
 }
 
@@ -66,5 +80,17 @@ Contest.prototype._createDirectories = function() {
     };
     return Promise.all(dirs.map(create));
 };
+
+Contest.prototype.getProblem = function(index) {
+    return this._problem[index];
+}
+
+Contest.prototype.addProblem = function(problem) {
+    this._problem.push(problem);
+}
+
+Contest.prototype.problemCount = function() {
+    return this._problem.length;
+}
 
 module.exports = Contest;
