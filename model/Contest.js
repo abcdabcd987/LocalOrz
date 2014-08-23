@@ -2,11 +2,15 @@ var path = require('path');
 var fs = require('fs');
 var walkdir = require('walkdir');
 var Promise = require('promise');
+var util = require('util');
+var events = require('events');
 var utils = require('../utils');
 var CONST = require('../const');
 var Problem = require('./Problem');
 
 function Contest() {
+    events.EventEmitter.call(this);
+
     this.title = null;
     this.version = CONST.VERSION;
     this._path = null;
@@ -14,15 +18,14 @@ function Contest() {
     this._problem = [];
     this._dataFileList = [];
 }
+util.inherits(Contest, events.EventEmitter);
 
 Contest.prototype.toDict = function() {
     var dict = {};
-    for (key in this) {
+    for (var key in this) {
         if (key === '_problem') {
             dict[key] = [];
-            for (item in this[key]) {
-                dict[key].push(item.toDict());
-            }
+            this[key].forEach(function(item) {dict[key].push(item.toDict());});
         } else if (key[0] !== '_') {
             dict[key] = this[key];
         }
@@ -31,16 +34,15 @@ Contest.prototype.toDict = function() {
 };
 
 Contest.prototype.loadDict = function(dict) {
-    for (key in dict) {
+    for (var key in dict) {
         if (key == '_problem') {
             this[key] = [];
-            for (item in dict[key]) {
-                this[key].push((new Problem).loadDict(dict[key]));
-            }
+            dict[key].forEach(function(item) {this[key].push((new Problem).loadDict(item));}, this);
         } else {
             this[key] = dict[key];
         }
     }
+    return this;
 }
 
 Contest.prototype.open = function(dir) {
@@ -49,11 +51,16 @@ Contest.prototype.open = function(dir) {
     var filepath = path.join(this._path, 'data', 'contest.json');
     var that = this;
 
-    return read(filepath).then(JSON.parse).then(that.loadDict.bind(that)).then(function() {
-        that._isOpened = true;
-        that.version = CONST.VERSION;
-        console.log(new Date(), '====== Contest Opened ======');
-    });
+    return read(filepath).then(JSON.parse).then(that.loadDict.bind(that))
+          .then(function() {
+               that._isOpened = true;
+               that.version = CONST.VERSION;
+               console.log((new Date()).toString(), '====== Contest Opened ======');
+               that.emit('open succeeded');
+           }, function(err) {
+               console.error(err);
+               that.emit('open failed', err);
+           });
 };
 
 Contest.prototype.save = function() {
@@ -61,11 +68,16 @@ Contest.prototype.save = function() {
     var json = JSON.stringify(obj, null, 4);
     var filepath = path.join(this._path, 'data', 'contest.json');
     var write = Promise.denodeify(fs.writeFile);
+    var that = this;
 
     return this._createDirectories()
                .then(write(filepath, json))
                .then(function() {
-                    console.log(new Date(), '====== Contest Saved ======');
+                    console.log((new Date()).toString(), '====== Contest Saved ======');
+                    that.emit('save succeeded');
+                }, function(err) {
+                    console.error(err);
+                    that.emit('save failed', err);
                 });
 };
 

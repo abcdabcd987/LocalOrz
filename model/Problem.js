@@ -1,4 +1,5 @@
 var CONST = require('../const');
+var Testcase = require('./Testcase');
 
 function Problem() {
     this.title      = '';
@@ -31,31 +32,27 @@ Problem.prototype.testcaseCount = function() {
 
 Problem.prototype.toDict = function() {
     var obj = {};
-    for (key in this) {
-        if (isArray(this[key])) {
+    for (var key in this) {
+        if (Array.isArray(this[key])) {
             obj[key] = [];
-            for (item in this[key]) {
-                obj[key].push(item.toDict());
-            }
+            this[key].forEach(function(item) {obj[key].push(item.toDict());});
         } else {
             obj[key] = this[key];
         }
     }
+    return obj;
 }
 
 Problem.prototype.loadDict = function(obj) {
-    for (key in this) {
-        if (isArray(this[key])) {
+    for (var key in obj) {
+        if (Array.isArray(this[key])) {
             this[key] = [];
-            for (item in obj[key]) {
-                var t = new Testcase;
-                t.loadDict(item);
-                this[key].push(t);
-            }
+            obj[key].forEach(function(item) {this[key].push((new Testcase).loadDict(item));}, this);
         } else {
             this[key] = obj[key];
         }
     }
+    return this;
 }
 
 module.exports = Problem;

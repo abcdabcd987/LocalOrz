@@ -13,7 +13,8 @@ Testcase.prototype.toDict = function() {
 };
 
 Testcase.prototype.loadDict = function(obj) {
-    for (key in this) this[key] = obj[key];
+    for (key in obj) this[key] = obj[key];
+    return this;
 };
 
 module.exports = Testcase;

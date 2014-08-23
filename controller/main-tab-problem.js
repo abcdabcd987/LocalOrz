@@ -4,7 +4,7 @@ var template = require('./template');
 var Problem = require('../model/Problem');
 var Testcase = require('../model/Testcase');
 
-function problemFormChange(e) {
+function problemFormChange(save, e) {
     var m = $("#modification");
     var id = m.find("#problem-id").val();
     var p = contest.getProblem(id);
@@ -20,10 +20,10 @@ function problemFormChange(e) {
     m.find("#problem-header-title").html(p.title);
     $("#problem-list .list-group a.problem-title[data-problem="+id+"]").html(p.title);
 
-    console.debug('should save now!');
+    if (save) contest.save();
 }
 
-function testcaseFormChange(e) {
+function testcaseFormChange(save, e) {
     var m = $("#modification");
     var pid = m.find("#pid").val();
     var tid = m.find("#tid").val();
@@ -36,7 +36,7 @@ function testcaseFormChange(e) {
     t.time   = m.find("#time").val();
     t.memory = m.find("#memory").val();
 
-    console.debug('should save now!');
+    if (save) contest.save();
 }
 
 function onProblemTitleClicked(e) {
@@ -51,6 +51,7 @@ function onProblemTitleClicked(e) {
         p.title = 'The New Problem';
         contest.addProblem(p);
         id = contest.problemCount()-1;
+        contest.save();
 
         var node = $(template.problemListBox({
             problem: p, 
@@ -70,9 +71,9 @@ function onProblemTitleClicked(e) {
     });
     var node = $(html);
 
-    node.find('input').on('keyup', problemFormChange);
-    node.find('input').on('change', problemFormChange);
-    node.find('select').on('change', problemFormChange);
+    node.find('input').on('keyup', problemFormChange.bind(this, false));
+    node.find('input').on('change', problemFormChange.bind(this, true));
+    node.find('select').on('change', problemFormChange.bind(this, true));
 
     $("#problem-list #modification").empty().append(node);
 }
@@ -96,8 +97,8 @@ function onTestcaseTitleClicked(e) {
     });
     var node = $(html);
 
-    node.find('input').on('keyup', testcaseFormChange);
-    node.find('input').on('change', testcaseFormChange);
+    node.find('input').on('keyup', testcaseFormChange.bind(this, false));
+    node.find('input').on('change', testcaseFormChange.bind(this, true));
     node.find('.typeahead').on('focus', onFileInputFocused);
 
     $("#problem-list #modification").empty().append(node);
@@ -134,6 +135,7 @@ function onFileInputFocused(e) {
     $(this).typeahead({
         source: obj,
         items: 24,
+        minLength: 0,
     });
 }
 
@@ -173,6 +175,7 @@ function onAddTestcase() {
         t.memory = o.memory;
     }
     p.addTestcase(t);
+    contest.save();
 
     _setupProblemListBox.call(this, pid, p);
 }
@@ -184,6 +187,7 @@ function onAutoAddTestcases() {
     var tid = p.testcaseCount();
     if (tid === 0) return;
     var o = p.getTestcase(tid-1);
+    contest.refreshDataFileList();
     var inputs = contest.getNextTestcases(o.input);
     var answers = contest.getNextTestcases(o.answer);
     var count = inputs.length < answers.length ? inputs.length : answers.length;
@@ -198,6 +202,7 @@ function onAutoAddTestcases() {
         t.memory = o.memory;
         p.addTestcase(t);
     }
+    contest.save();
 
     _setupProblemListBox.call(this, pid, p);
 }
@@ -215,10 +220,12 @@ function onDelete() {
         p.delTestcase(tid);
         _setupProblemListBox.call(this, pid, p);
     }
+    contest.save();
 
     exports.setup();
 }
 
+var first_time = true;
 exports.setup = function() {
     var box = $("#problem-list #new-problem-box");
     box.prevAll().remove();
@@ -227,11 +234,16 @@ exports.setup = function() {
             id     : pid,
             problem: contest.getProblem(pid)
         }));
+        node.find(".problem-title").on('click', onProblemTitleClicked);
+        node.find(".problem-title").on('contextmenu', contextMenu);
+        node.find(".testcase-title").on('click', onTestcaseTitleClicked);
+        node.find(".testcase-title").on('contextmenu', contextMenu);
         box.before(node);
     }
+    $("#problem-list #modification").html();
 
-    $("#problem-list .problem-title").on('click', onProblemTitleClicked);
-    $("#problem-list .problem-title").on('contextmenu', contextMenu);
-    $("#problem-list .testcase-title").on('click', onTestcaseTitleClicked);
-    $("#problem-list .testcase-title").on('contextmenu', contextMenu);
+    if (first_time) {
+        $("#problem-list .problem-title[data-problem=add]").on('click', onProblemTitleClicked);
+        first_time = false;
+    }
 }
