@@ -45,7 +45,7 @@
   <div class="form-group">
     <label for="spj" class="col-xs-4 control-label">Path to Special Judge</label>
     <div class="col-xs-8">
-      <input type="email" class="form-control" id="spj-path" placeholder="e.g. fibonacci/spj.exe" value="<%= problem.spj %>"<%= problem.comparison !== CONST.COMPARISON.SPJ ? ' disabled' : '' %>>
+      <input type="email" class="form-control typeahead" id="spj" placeholder="e.g. fibonacci/spj.exe" value="<%= problem.spj %>"<%= problem.comparison !== CONST.COMPARISON.SPJ ? ' disabled' : '' %>>
     </div>
   </div>
 </form>

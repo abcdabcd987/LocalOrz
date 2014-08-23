@@ -41,6 +41,10 @@ html, body {
     font-weight: bold;
 }
 
+#problem-list .testcase-title {
+    padding-left: 20px;
+}
+
 #problem-list .panel-body {
     padding: 0;
 }

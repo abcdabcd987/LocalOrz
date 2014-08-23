@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1>Testcase <%= tid %> <small id="problem-header-title">of <%= problem.title %></small></h1>
+  <h1>Testcase <%= tid+1 %> <small id="problem-header-title">of <%= problem.title %></small></h1>
 </div>
 <form class="form-horizontal" role="form">
   <input type="hidden" id="pid" value="<%= pid %>">
@@ -7,14 +7,14 @@
   <div class="form-group">
     <label for="input" class="col-xs-4 control-label">Input File</label>
     <div class="col-xs-8">
-      <input type="text" class="form-control" id="input" placeholder="e.g. fibonacci/fibonacci8.in" value="<%= testcase.input %>">
+      <input type="text" class="form-control typeahead" id="input" placeholder="e.g. fibonacci/fibonacci8.in" value="<%= testcase.input %>">
     </div>
   </div>
 
   <div class="form-group">
     <label for="answer" class="col-xs-4 control-label">Answer File</label>
     <div class="col-xs-8">
-      <input type="text" class="form-control" id="answer" placeholder="e.g. fibonacci/fibonacci8.out" value="<%= testcase.answer %>">
+      <input type="text" class="form-control typeahead" id="answer" placeholder="e.g. fibonacci/fibonacci8.out" value="<%= testcase.answer %>">
     </div>
   </div>
   

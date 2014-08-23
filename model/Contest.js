@@ -1,6 +1,8 @@
 var path = require('path');
 var fs = require('fs');
+var walkdir = require('walkdir');
 var Promise = require('promise');
+var utils = require('../utils');
 var CONST = require('../const');
 var Problem = require('./Problem');
 
@@ -10,6 +12,7 @@ function Contest() {
     this._path = null;
     this._isOpened = false;
     this._problem = [];
+    this._dataFileList = [];
 }
 
 Contest.prototype.toDict = function() {
@@ -40,7 +43,8 @@ Contest.prototype.loadDict = function(dict) {
     }
 }
 
-Contest.prototype.open = function() {
+Contest.prototype.open = function(dir) {
+    this._path = path.normalize(dir);
     var read = Promise.denodeify(fs.readFile);
     var filepath = path.join(this._path, 'data', 'contest.json');
     var that = this;
@@ -83,14 +87,51 @@ Contest.prototype._createDirectories = function() {
 
 Contest.prototype.getProblem = function(index) {
     return this._problem[index];
-}
+};
 
 Contest.prototype.addProblem = function(problem) {
     this._problem.push(problem);
+};
+
+Contest.prototype.delProblem = function(index) {
+    for (var i = index+1; i < this._problem.length; ++i) {
+        this._problem[i-1] = this._problem[i];
+    }
+    --this._problem.length;
 }
 
 Contest.prototype.problemCount = function() {
     return this._problem.length;
+};
+
+Contest.prototype.refreshDataFileList = function() {
+    var base = path.join(this._path, 'data/');
+    this._dataFileList = walkdir.sync(base).map(function(item) {
+        return item.replace(base, '');
+    });
+};
+
+Contest.prototype.getDataFileList = function(_prefix) {
+    var prefix = typeof _prefix === 'undefined' ? '' : _prefix;
+    var list = [];
+    this._dataFileList.forEach(function(file) {
+        if (file.search(_prefix) !== -1) list.push(file);
+    });
+    return list;
+};
+
+Contest.prototype.getNextTestcases = function(last) {
+    var list = [];
+    while (true) {
+        var next = utils.getNextFilename(last);
+        if (next && this._dataFileList.indexOf(next) !== -1) {
+            list.push(next);
+            last = next;
+        } else {
+            break;
+        }
+    }
+    return list;
 }
 
 module.exports = Contest;
