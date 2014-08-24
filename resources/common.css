@@ -11,6 +11,10 @@ html, body {
     user-select: none;
 }
 
+body {
+    padding-top: 60px;
+}
+
 #nav {
     position: absolute;
     top: 0;
@@ -34,6 +38,11 @@ html, body {
 
 #alert {
     display: none;
+}
+
+#modification {
+    position: fixed;
+    left: 25%;
 }
 
 #problem-list .problem-title {

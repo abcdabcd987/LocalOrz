@@ -131,7 +131,7 @@ function contextMenu(e) {
 
 function onFileInputFocused(e) {
     contest.refreshDataFileList();
-    var obj = contest.getDataFileList($(this).val()).map(function(item){return {name: item}});
+    var obj = contest._dataFileList.map(function(item){return {name: item}});
     $(this).typeahead({
         source: obj,
         items: 24,
@@ -222,6 +222,7 @@ function onDelete() {
     }
     contest.save();
 
+    $("#problem-list #modification").empty();
     exports.setup();
 }
 
