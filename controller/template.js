@@ -10,6 +10,8 @@ function load(filename) {
 exports.mainNav              = load('main-nav');
 exports.mainTabContest       = load('main-tab-contest');
 exports.mainTabProblems      = load('main-tab-problems');
+exports.mainTabSettings      = load('main-tab-settings');
 exports.problemListBox       = load('problem-list-box');
 exports.problemModification  = load('problem-modification');
+exports.compilerSettingsRow  = load('compiler-settings-row');
 exports.testcaseModification = load('testcase-modification');

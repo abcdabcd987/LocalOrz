@@ -163,9 +163,9 @@ function onAddTestcase() {
     if (tid === 0) {
         t.input  = '';
         t.answer = '';
-        t.score  = nconf.get('defaults:fullScore');
-        t.time   = nconf.get('defaults:timeLimit');
-        t.memory = nconf.get('defaults:memoryLimit');
+        t.score  = nconf.get('data:fullScore');
+        t.time   = nconf.get('data:timeLimit');
+        t.memory = nconf.get('data:memoryLimit');
     } else {
         var o = p.getTestcase(tid-1);
         t.input  = utils.getNextFilename(o.input);

@@ -71,3 +71,7 @@ body {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 }
+
+#compilers-settings input {
+    font-family: monospace;
+}
