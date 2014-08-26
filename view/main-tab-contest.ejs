@@ -1,18 +1,13 @@
 <div id="alert" class="alert alert-danger" role="alert"></div>
 <% if (isOpened) { %>
     <div class="page-header">
-      <h1>Contest: <small><%= title %></small>
+      <h1>Contest: <small id="contest-title"><%= title %></small>
     </div>
     <form class="form-horizontal" role="form">
       <div class="form-group">
-        <label for="title" class="col-xs-2 control-label">Title</label>
+        <label for="title-to-update" class="col-xs-2 control-label">Title</label>
         <div class="col-xs-10">
-          <input type="text" class="form-control" id="title" placeholder="Title" value="<%= title %>">
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-xs-10 col-xs-offset-2">
-          <button class="btn btn-primary" id="btn-update">Update!</button>
+          <input type="text" class="form-control" id="title-to-update" placeholder="Title" value="<%= title %>">
         </div>
       </div>
     </form>

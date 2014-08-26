@@ -73,5 +73,5 @@ body {
 }
 
 #compilers-settings input {
-    font-family: monospace;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }

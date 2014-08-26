@@ -27,13 +27,19 @@ function openContest(e) {
     contest.open(dir);
 }
 
-function updateContest(e) {
+function updateContest(save, e) {
     e.preventDefault();
     e.stopPropagation();
+
+    contest.title = $("#title-to-update").val();
+    $("#contest-title").text(contest.title);
+
+    if (save) contest.save();
 }
 
 exports.setup = function() {
     $("#btn-new").on('click', newContest);
     $("#btn-open").on('click', openContest);
-    $("#btn-update").on('click', updateContest);
+    $("#title-to-update").on('change', updateContest.bind(this, true));
+    $("#title-to-update").on('keyup', updateContest.bind(this, false));
 };

@@ -10,6 +10,7 @@
       <a class="navbar-brand" href="#">LocalOrz</a>
     </div>
     <div class="navbar-collapse collapse">
+    <% if (isOpen) { %>
       <ul class="nav navbar-nav">
         <li<%- active.indexOf('Problems')    !== -1 ? ' class="active"' : '' %>><a href="#">Problems</a></li>
         <li<%- active.indexOf('Contestants') !== -1 ? ' class="active"' : '' %>><a href="#">Contestants</a></li>
@@ -18,6 +19,11 @@
         <li<%- active.indexOf('Settings')     !== -1 ? ' class="active"' : '' %>><a href="#">Settings</a></li>
         <li<%- active.indexOf('Contest')     !== -1 ? ' class="active"' : '' %>><a href="#">Contest</a></li>
       </ul>
+    <% } else { %>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="active"><a href="#">Contest</a></li>
+      </ul>
+    <% } %>
     </div>
   </div>
 </div>
