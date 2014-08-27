@@ -2,6 +2,7 @@ var CONST = require('../const');
 var Testcase = require('./Testcase');
 
 function Problem() {
+    this.uuid       = '';
     this.title      = '';
     this.source     = '';
     this.input      = '';

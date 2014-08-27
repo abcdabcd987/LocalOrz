@@ -1,3 +1,4 @@
+var uuid = require('node-uuid');
 var CONST = require('../const');
 var utils = require('../utils');
 var template = require('./template');
@@ -48,6 +49,7 @@ function onProblemTitleClicked(e) {
 
     if (id === 'add') {
         var p = new Problem;
+        p.uuid = uuid.v4();
         p.title = 'The New Problem';
         contest.addProblem(p);
         id = contest.problemCount()-1;

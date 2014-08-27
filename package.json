@@ -8,6 +8,7 @@
   "dependencies": {
     "ejs": "^1.0.0",
     "nconf": "^0.6.9",
+    "node-uuid": "^1.4.1",
     "promise": "^5.0.0",
     "walkdir": "0.0.7"
   }
