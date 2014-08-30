@@ -7,6 +7,7 @@ function load(filename) {
     return ejs.compile(str);
 }
 
+exports.person               = load('person');
 exports.mainNav              = load('main-nav');
 exports.mainTabContest       = load('main-tab-contest');
 exports.mainTabProblems      = load('main-tab-problems');

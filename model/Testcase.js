@@ -8,12 +8,12 @@ function Testcase() {
 
 Testcase.prototype.toDict = function() {
     var obj = {};
-    for (key in this) obj[key] = this[key];
+    for (var key in this) obj[key] = this[key];
     return obj;
 };
 
 Testcase.prototype.loadDict = function(obj) {
-    for (key in obj) this[key] = obj[key];
+    for (var key in obj) this[key] = obj[key];
     return this;
 };
 

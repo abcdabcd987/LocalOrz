@@ -1,0 +1,62 @@
+<% for (var j = 0; j < person.resultCount(); ++j) { var result = person.getResult(j); %>
+  <% if (j) { %>
+    <hr>
+  <% } %>
+  <div class="result">
+    <div class="result-heading">
+      <ul class="result-left">
+        <li><strong>Problem: </strong><%= result.title %></li>
+        <li><strong>Source Filename: </strong><%= result.filename %></li>
+      </ul>
+      <ul class="result-right">
+      <% if (result.status === CONST.RESULT.CE) { %>
+        <li><strong>Compilation Error</strong></li>
+      <% } %>
+        <li><strong><a href="#rejudge" data-person="<%= person._name %>" data-problem="<%= result.uuid %>">Rejudge</a></strong></li>
+      <% if (result.detail) { %>
+        <li><strong><a href="#detail" data-person="<%= person._name %>" data-problem="<%= result.uuid %>">Detail</a></strong></li>
+      <% } %>
+      </ul>
+      <div class="clear"></div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Result</th>
+          <th>Score</th>
+          <th>Time</th>
+          <th>Memory</th>
+          <th>stderr</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% for (var i = 0; i < result.pointCount(); ++i) { var p = result.getPoint(i); %>
+        <tr>
+          <td><%= i+1 %></td>
+        <% if (p.detail) { %>
+          <td><%= statusToString[p.status] %> <a href="#point" data-person="<%= person._name %>" data-problem="<%= result.uuid %>" data-index="<%= i %>">(?)</a></td>
+        <% } else { %>
+          <td><%= statusToString[p.status] %></td>
+        <% } %>
+          <td><%= p.score %></td>
+          <td><%= p.time %>ms</td>
+          <td><%= p.memory %>KB</td>
+        <% if (p.stderr) { %>
+          <td><a href="#stderr" data-person="<%= person._name %>" data-problem="<%= result.uuid %>" data-index="<%= i %>">(Show)</a></td>
+        <% } else { %>
+          <td></td>
+        <% } %>
+        </tr>
+      <% } %>
+      </tbody>
+    </table>
+    <div class="result-footer">
+      <ul class="result-left">
+        <li><strong>Score: </strong><%= result.score %></li>
+        <li><strong>Time: </strong><%= result.time %>ms</li>
+      </ul>
+      <div class="clear"></div>
+    </div>
+  </div>
+<% } %>
