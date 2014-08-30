@@ -8,7 +8,7 @@ function Result() {
 }
 
 Object.defineProperty(Result.prototype, 'time', {
-    enumerable: true,
+    enumerable: false,
     get: function() {
         var sum = 0;
         this._point.forEach(function(item) { sum += item.time; });
@@ -17,7 +17,7 @@ Object.defineProperty(Result.prototype, 'time', {
 })
 
 Object.defineProperty(Result.prototype, 'score', {
-    enumerable: true,
+    enumerable: false,
     get: function() {
         var sum = 0;
         this._point.forEach(function(item) { sum += item.score; });

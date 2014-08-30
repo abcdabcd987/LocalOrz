@@ -1,10 +1,18 @@
+var fs = require('fs');
+var path = require('path');
+var CONST = require('../CONST');
+var Promise = require('promise');
+var Result = require('./Result');
+
 function Person() {
     this._name   = null;
+    this._path   = null;
+    this.version = null;
     this._result = [];
 }
 
 Object.defineProperty(Person.prototype, 'time', {
-    enumerable: true,
+    enumerable: false,
     get: function() {
         var sum = 0;
         this._result.forEach(function(item) { sum += item.time; });
@@ -13,7 +21,7 @@ Object.defineProperty(Person.prototype, 'time', {
 })
 
 Object.defineProperty(Person.prototype, 'score', {
-    enumerable: true,
+    enumerable: false,
     get: function() {
         var sum = 0;
         this._result.forEach(function(item) { sum += item.score; });
@@ -58,5 +66,60 @@ Person.prototype.getResultByUUID = function(uuid) {
     }
     return null;
 }
+
+Person.prototype.toDict = function() {
+    var obj = {};
+    for (var key in this) {
+        if (Array.isArray(this[key])) {
+            obj[key] = [];
+            this[key].forEach(function(item) {obj[key].push(item.toDict());});
+        } else if (key[0] !== '_') {
+            obj[key] = this[key];
+        }
+    }
+    return obj;
+}
+
+Person.prototype.loadDict = function(obj) {
+    for (var key in obj) {
+        if (Array.isArray(this[key])) {
+            this[key] = [];
+            obj[key].forEach(function(item) {this[key].push((new Result).loadDict(item));}, this);
+        } else {
+            this[key] = obj[key];
+        }
+    }
+    return this;
+}
+
+Person.prototype.open = function(dir) {
+    this._path = path.normalize(dir);
+    var read = Promise.denodeify(fs.readFile);
+    var filepath = path.join(this._path, 'result.json');
+    var that = this;
+
+    return read(filepath).then(JSON.parse).then(that.loadDict.bind(that))
+          .then(function() {
+               that._isOpened = true;
+               that.version = CONST.VERSION;
+           }, function(err) {
+               console.error(err);
+           });
+};
+
+Person.prototype.save = function() {
+    var obj = this.toDict();
+    var json = JSON.stringify(obj, null, 2);
+    var filepath = path.join(this._path, 'result.json');
+    var write = Promise.denodeify(fs.writeFile);
+    var that = this;
+
+    return write(filepath, json)
+          .then(function() {
+
+           }, function(err) {
+               console.error(err);
+           });
+};
 
 module.exports = Person;

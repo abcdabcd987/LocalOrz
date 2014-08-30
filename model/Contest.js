@@ -65,7 +65,7 @@ Contest.prototype.open = function(dir) {
 
 Contest.prototype.save = function() {
     var obj = this.toDict();
-    var json = JSON.stringify(obj, null, 4);
+    var json = JSON.stringify(obj, null, 2);
     var filepath = path.join(this._path, 'data', 'contest.json');
     var write = Promise.denodeify(fs.writeFile);
     var that = this;
