@@ -33,9 +33,9 @@ function testcaseFormChange(save, e) {
 
     t.input  = m.find("#input").val();
     t.answer = m.find("#answer").val();
-    t.score  = m.find("#score").val();
-    t.time   = m.find("#time").val();
-    t.memory = m.find("#memory").val();
+    t.score  = Number(m.find("#score").val());
+    t.time   = Number(m.find("#time").val());
+    t.memory = Number(m.find("#memory").val());
 
     if (save) contest.save();
 }

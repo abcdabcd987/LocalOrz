@@ -9,6 +9,7 @@ html, body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor: default;
 }
 
 body {
@@ -74,4 +75,38 @@ body {
 
 #compilers-settings input {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+#contestants-table {
+    margin-bottom: 50px;
+}
+
+.progressbar {
+    background-color: #444444;
+    height: 21px;
+}
+
+.progressbar-bar {
+    font-size: 13px;
+    line-height: 21px;
+    background-color: #00bc8c;
+    position: relative;
+    height: 100%; 
+}
+
+.progressbar-text {
+    position: relative;
+    top: -21px;
+    left: 5px;
+    color: #fff;
+}
+
+#contestants-button-box {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 7px;
+    background-color: #333;
+    z-index: 1030;
 }

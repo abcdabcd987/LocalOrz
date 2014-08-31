@@ -27,5 +27,10 @@ module.exports = {
         NO_OUTPUT      : 'no output file',
         NO_STD_INPUT   : 'no standard input file',
         NO_STD_OUTPUT  : 'no standard output file',
+    },
+
+    PERSON: {
+        UNJUDGED : 'unjudged',
+        JUDGED   : 'judged',
     }
 };

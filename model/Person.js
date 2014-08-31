@@ -7,6 +7,8 @@ var Result = require('./Result');
 function Person() {
     this._name   = null;
     this._path   = null;
+    this._rank   = null;
+    this._status = null;
     this.version = null;
     this._result = [];
 }
@@ -99,11 +101,13 @@ Person.prototype.open = function(dir) {
     var that = this;
 
     return read(filepath).then(JSON.parse).then(that.loadDict.bind(that))
-          .then(function() {
-               that._isOpened = true;
-               that.version = CONST.VERSION;
+          .then(function(person) {
+               person._isOpened = true;
+               person.version = CONST.VERSION;
+               return person;
            }, function(err) {
                console.error(err);
+               return err;
            });
 };
 
@@ -119,6 +123,7 @@ Person.prototype.save = function() {
 
            }, function(err) {
                console.error(err);
+               return err;
            });
 };
 

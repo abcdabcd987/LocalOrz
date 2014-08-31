@@ -18,7 +18,17 @@ function Contest() {
     this._problem = [];
     this._dataFileList = [];
 }
+
 util.inherits(Contest, events.EventEmitter);
+
+Object.defineProperty(Contest.prototype, 'score', {
+    enumerable: false,
+    get: function() {
+        var sum = 0;
+        this._problem.forEach(function(item) { sum += item.score; });
+        return sum;
+    }
+})
 
 Contest.prototype.toDict = function() {
     var dict = {};

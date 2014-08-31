@@ -1,24 +1,6 @@
+var utils = require('../utils');
 var CONST = require('../CONST');
 var template = require('./template');
-
-var statusToString = {};
-statusToString[CONST.RESULT.UNKNOWN          ] = 'Unknown',
-statusToString[CONST.RESULT.NORMAL           ] = 'Normal',
-statusToString[CONST.RESULT.COMPILATION_ERROR] = 'Compilation Error',
-statusToString[CONST.RESULT.NO_SOURCE_FILE   ] = 'No Source File',
-
-statusToString[CONST.POINT.AC                ] = 'Accepted',
-statusToString[CONST.POINT.WA                ] = 'Wrong Answer',
-statusToString[CONST.POINT.RE                ] = 'Runtime Error',
-statusToString[CONST.POINT.CE                ] = 'Compilation Error',
-statusToString[CONST.POINT.MLE               ] = 'Memory Limit Exceeded',
-statusToString[CONST.POINT.TLE               ] = 'Time Limit Exceeded',
-statusToString[CONST.POINT.PART_CORRECT      ] = 'Partly Correct',
-statusToString[CONST.POINT.CANNOT_EXECUTE    ] = 'Cannot Execute',
-statusToString[CONST.POINT.SPJ_ERROR         ] = 'Special Judge Error',
-statusToString[CONST.POINT.NO_OUTPUT         ] = 'No Output File',
-statusToString[CONST.POINT.NO_STD_INPUT      ] = 'No Standard Input File',
-statusToString[CONST.POINT.NO_STD_OUTPUT     ] = 'No Standard Output File',
 
 exports.show = function(name) {
     if (!(name in contestants)) return;
@@ -30,7 +12,7 @@ exports.show = function(name) {
         var node = $(template.person({
             person: person,
             CONST : CONST,
-            statusToString: statusToString,
+            statusToString: utils.statusToString,
         }));
     
         node.find('a[href="#rejudge"]').on('click', function(e) {

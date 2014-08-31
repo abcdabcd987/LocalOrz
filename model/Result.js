@@ -1,3 +1,5 @@
+var Point = require('./Point');
+
 function Result() {
     this.uuid     = null;
     this.title    = null;
@@ -58,7 +60,7 @@ Result.prototype.loadDict = function(obj) {
     for (var key in obj) {
         if (Array.isArray(this[key])) {
             this[key] = [];
-            obj[key].forEach(function(item) {this[key].push((new Result).loadDict(item));}, this);
+            obj[key].forEach(function(item) {this[key].push((new Point).loadDict(item));}, this);
         } else {
             this[key] = obj[key];
         }

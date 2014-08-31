@@ -12,6 +12,15 @@ function Problem() {
     this._testcase  = [];
 }
 
+Object.defineProperty(Problem.prototype, 'score', {
+    enumerable: false,
+    get: function() {
+        var sum = 0;
+        this._testcase.forEach(function(item) { sum += item.score; });
+        return sum;
+    }
+})
+
 Problem.prototype.addTestcase = function(t) {
     this._testcase.push(t);
 };
