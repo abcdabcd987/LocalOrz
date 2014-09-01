@@ -4,11 +4,55 @@ var Promise = require('promise');
 var utils = require('../utils');
 var CONST = require('../CONST');
 var template = require('./template');
+var person = require('./person');
 var Person = require('../model/Person');
+
+var selector = {
+    last: 0,
+    selected: {},
+}
+
+function select(node, index) {
+    node.addClass('selected');
+    selector.selected[index] = true;
+}
+
+function onSelect(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    var jthis = $(this);
+    var trs = $("#contestants-table-body tr");
+    var index = trs.index(jthis);
+
+    if (keys.mod && !keys.shift) {
+        select(jthis, index);
+    } else if (!keys.mod && keys.shift) {
+        var st = Math.min(selector.last, index);
+        var ed = Math.max(selector.last, index);
+        for (var i = st; i <= ed; ++i) {
+            select(trs.eq(i), i);
+        }
+    } else {
+        selector.selected = {};
+        $("#contestants-table-body tr.selected").removeClass('selected');
+        select(jthis, index);
+    }
+
+    selector.last = index;
+    $("#btn-judge").removeClass('disabled');
+}
+
+function onDblclick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    person.show(this.dataset.name);
+}
 
 function updateTable() {
     updateRank();
-    
+
     var tbody = $("#contestants-table-body");
     tbody.empty();
     var totalScore = contest.score;
@@ -19,6 +63,8 @@ function updateTable() {
             statusToString: utils.statusToString,
             totalScore: totalScore
         }));
+        node.on('click', onSelect);
+        node.on('dblclick', onDblclick);
 
         tbody.append(node);
     }
@@ -60,11 +106,11 @@ exports.refresh = function() {
                 if (!stats.isDirectory()) { 
                     fulfill(null);
                 } else {
-                    var person = new Person;
-                    person.version = CONST.VERSION;
-                    person._name = name;
-                    person._status = CONST.PERSON.JUDGED
-                    person.open(dir).then(fulfill);
+                    var p = new Person;
+                    p.version = CONST.VERSION;
+                    p._name = name;
+                    p._status = CONST.PERSON.JUDGED
+                    p.open(dir).then(fulfill);
                 }
             })
         })
@@ -77,10 +123,13 @@ exports.refresh = function() {
         contestants = {};
         for (var i = 0; i < people.length; ++i) {
             if (!people[i]) continue;
-            var person = people[i];
-            contestants[person._name] = person;
+            var p = people[i];
+            contestants[p._name] = p;
         }
 
         updateTable();
     }).then(null, function(e) {console.error(e);})
+}
+
+exports.setup = function() {
 }

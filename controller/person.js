@@ -4,8 +4,21 @@ var template = require('./template');
 
 exports.show = function(name) {
     if (!(name in contestants)) return;
+    if (name in showingPerson) {
+        showingPerson[name].focus();
+        return;
+    }
+
     var person = contestants[name];
-    var win = gui.Window.open('person.html');
+    var win = gui.Window.open('person.html', {
+        position: "mouse",
+        width: 729,
+        height: 465,
+        resizable: false,
+        toolbar: false,
+    });
+    showingPerson[name] = win;
+
     win.on('loaded', function() {
         var w = win.window;
     
@@ -50,5 +63,10 @@ exports.show = function(name) {
     
         $(w.document.head).find('title').text(person._name);
         $(w.document.body).html(node);
+    });
+
+    win.on('close', function() {
+        delete showingPerson[name];
+        this.close(true);
     })
 }

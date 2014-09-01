@@ -22,12 +22,12 @@
     <table>
       <thead>
         <tr>
-          <th>#</th>
-          <th>Result</th>
-          <th>Score</th>
-          <th>Time</th>
-          <th>Memory</th>
-          <th>stderr</th>
+          <th style="width: 5%;">#</th>
+          <th style="width: 40%;">Result</th>
+          <th style="width: 10%;">Score</th>
+          <th style="width: 15%;">Time</th>
+          <th style="width: 20%;">Memory</th>
+          <th style="width: 10%;">stderr</th>
         </tr>
       </thead>
       <tbody>
@@ -40,8 +40,8 @@
           <td><%= statusToString[p.status] %></td>
         <% } %>
           <td><%= p.score %></td>
-          <td><%= p.time %>ms</td>
-          <td><%= p.memory %>KB</td>
+          <td><%= Number(p.time/1000).toFixed(3).toLocaleString('en-US') %> s</td>
+          <td><%= Number(p.memory).toLocaleString('en-US') %> KB</td>
         <% if (p.stderr) { %>
           <td><a href="#stderr" data-person="<%= person._name %>" data-problem="<%= result.uuid %>" data-index="<%= i %>">(Show)</a></td>
         <% } else { %>
@@ -54,7 +54,7 @@
     <div class="result-footer">
       <ul class="result-left">
         <li><strong>Score: </strong><%= result.score %></li>
-        <li><strong>Time: </strong><%= result.time %>ms</li>
+        <li><strong>Time: </strong><%= Number(result.time/1000).toFixed(2).toLocaleString('en-US') %>ms</li>
       </ul>
       <div class="clear"></div>
     </div>

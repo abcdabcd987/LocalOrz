@@ -81,6 +81,10 @@ body {
     margin-bottom: 50px;
 }
 
+#contestants-table-body tr.selected {
+    background-color: #5c2040;
+}
+
 .progressbar {
     background-color: #444444;
     height: 21px;

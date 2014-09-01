@@ -8,6 +8,6 @@
       <span class="progressbar-text"><%= person.score %></span>
     </div>
   </td>
-  <td data-value="<%= person.time %>"><%= person.time %>ms</td>
+  <td data-value="<%= person.time %>"><%= Number(person.time/1000).toFixed(2).toLocaleString('en-US') %> s</td>
   <td data-value="<%= statusToString[person._status] %>"><%= statusToString[person._status] %></td>
 </tr>

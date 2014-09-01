@@ -1,4 +1,5 @@
 var Point = require('./Point');
+var CONST = require('../const');
 
 function Result() {
     this.uuid     = null;
@@ -13,7 +14,11 @@ Object.defineProperty(Result.prototype, 'time', {
     enumerable: false,
     get: function() {
         var sum = 0;
-        this._point.forEach(function(item) { sum += item.time; });
+        this._point.forEach(function(item) { 
+            if (item.status === CONST.POINT.AC || item.status === CONST.POINT.PART_CORRECT) {
+                sum += item.time; 
+            }
+        });
         return sum;
     }
 })
