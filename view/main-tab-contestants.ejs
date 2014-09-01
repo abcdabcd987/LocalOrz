@@ -44,8 +44,8 @@ $('a[href="#sort"]').on('click', function(e) {
   }
   sort_type = $(this).data("type");
 
-  var arr = $("#contestants-table-body tr");
+  var arr = $("#contestants-table-body tr").clone(true);
   arr.sort(cmp);
-  $("#contestants-table-body").empty().append(arr);
+  $("#contestants-table-body").html(arr);
 })
 </script>

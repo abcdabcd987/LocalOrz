@@ -1,9 +1,9 @@
 function Testcase() {
     this.input  = '';
     this.answer = '';
-    this.score  = '';
-    this.time   = '';
-    this.memory = '';
+    this.score  = 0;
+    this.time   = 0;
+    this.memory = 0;
 }
 
 Testcase.prototype.toDict = function() {

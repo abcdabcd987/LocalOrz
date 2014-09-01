@@ -1,11 +1,11 @@
 function Point() {
-    this.detail   = null;
-    this.status   = null;
-    this.score    = null;
-    this.time     = null
-    this.memory   = null;
-    this.exitcode = null;
-    this.stderr   = null;
+    this.detail   = '';
+    this.status   = '';
+    this.score    = 0;
+    this.time     = 0;
+    this.memory   = 0;
+    this.exitcode = 0;
+    this.stderr   = '';
 }
 
 Point.prototype.toDict = function() {

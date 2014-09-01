@@ -81,8 +81,22 @@ body {
     margin-bottom: 50px;
 }
 
+#contestants-table-body tr td {
+    padding-top: 6px;
+    padding-bottom: 5px;
+}
+
 #contestants-table-body tr.selected {
     background-color: #5c2040;
+}
+
+#contestants-table-body tr.current {
+    border: solid 1px #AD451D;
+}
+
+#contestants-table-body tr.current td {
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .progressbar {

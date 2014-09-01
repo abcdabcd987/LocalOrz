@@ -5,11 +5,11 @@ var Promise = require('promise');
 var Result = require('./Result');
 
 function Person() {
-    this._name   = null;
-    this._path   = null;
-    this._rank   = null;
-    this._status = null;
-    this.version = null;
+    this._name   = '';
+    this._path   = '';
+    this._rank   = 0;
+    this._status = '';
+    this.version = '';
     this._result = [];
 }
 

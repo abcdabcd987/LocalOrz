@@ -35,6 +35,18 @@ function pageProblems() {
     setupEvents();
 }
 
+function pageContestants() {
+    $("#nav").html(template.mainNav({
+        active:['Contestants'],
+        isOpen: contest._isOpened,
+    }));
+    $("#wrap").html(template.mainTabContestants({}));
+    require('./main-tab-contestants').setup();
+    require('./main-tab-contestants').refresh();
+
+    setupEvents();
+}
+
 function pageSettings() {
     $("#nav").html(template.mainNav({
         active:['Settings'],
@@ -53,6 +65,7 @@ exports.setup = function(showPage) {
     page['Contest'] = pageContest;
     page['Problems'] = pageProblems;
     page['Settings'] = pageSettings;
+    page['Contestants'] = pageContestants;
 
     var func = page[showPage];
     func();

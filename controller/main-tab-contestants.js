@@ -25,29 +25,73 @@ function onSelect(e) {
     var trs = $("#contestants-table-body tr");
     var index = trs.index(jthis);
 
-    if (keys.mod && !keys.shift) {
-        select(jthis, index);
-    } else if (!keys.mod && keys.shift) {
-        var st = Math.min(selector.last, index);
-        var ed = Math.max(selector.last, index);
-        for (var i = st; i <= ed; ++i) {
-            select(trs.eq(i), i);
+    if (e.which === 1) { // Left
+        if (keys.mod && !keys.shift) {
+            select(jthis, index);
+        } else if (!keys.mod && keys.shift) {
+            var st = Math.min(selector.last, index);
+            var ed = Math.max(selector.last, index);
+            for (var i = st; i <= ed; ++i) {
+                select(trs.eq(i), i);
+            }
+        } else {
+            selector.selected = {};
+            $("#contestants-table-body tr.selected").removeClass('selected');
+            select(jthis, index);
         }
-    } else {
-        selector.selected = {};
-        $("#contestants-table-body tr.selected").removeClass('selected');
-        select(jthis, index);
+    } else if (e.which === 3) { // Right
+        if (!keys.mod && !keys.shift && !(index in selector.selected)) {
+            selector.selected = {};
+            $("#contestants-table-body tr.selected").removeClass('selected');
+            select(jthis, index);
+        }
     }
 
-    selector.last = index;
+    trs.eq(selector.last).removeClass('current');
+    jthis.addClass('current');
     $("#btn-judge").removeClass('disabled');
+    selector.last = index;
 }
 
-function onDblclick(e) {
+function onShowJudgeResult(e) {
+    if (e) e.preventDefault();
+    if (e) e.stopPropagation();
+
+    person.show(this.dataset.name);
+}
+
+function onJudge(e) {
+    if (e) e.preventDefault();
+    if (e) e.stopPropagation();
+
+    //TODO: here!
+}
+
+function contextMenu(e) {
     e.preventDefault();
     e.stopPropagation();
 
-    person.show(this.dataset.name);
+    var judge = new gui.MenuItem({
+        label: 'Judge',
+        click: onJudge.bind(this)
+    });
+    var showJudgeResult = new gui.MenuItem({
+        label: 'Show Judge Result',
+        click: onShowJudgeResult.bind(this),
+        enabled: Object.keys(selector.selected).length === 1
+    });
+    var refresh = new gui.MenuItem({
+        label: 'Refresh',
+        click: exports.refresh
+    });
+
+    var menu = new gui.Menu();
+    menu.append(judge);
+    menu.append(showJudgeResult);
+    menu.append(new gui.MenuItem({type: 'separator'}));
+    menu.append(refresh);
+    menu.popup(e.clientX, e.clientY);
+    return false;
 }
 
 function updateTable() {
@@ -63,8 +107,9 @@ function updateTable() {
             statusToString: utils.statusToString,
             totalScore: totalScore
         }));
-        node.on('click', onSelect);
-        node.on('dblclick', onDblclick);
+        node.on('mousedown', onSelect);
+        node.on('dblclick', onShowJudgeResult);
+        node.on('contextmenu', contextMenu);
 
         tbody.append(node);
     }
@@ -95,7 +140,10 @@ function updateRank() {
     }
 }
 
-exports.refresh = function() {
+exports.refresh = function(e) {
+    if (e) e.preventDefault();
+    if (e) e.stopPropagation();
+
     var stat = Promise.denodeify(fs.stat);
     var readdir = Promise.denodeify(fs.readdir);
     var srcpath = path.join(contest._path, 'src');
@@ -128,8 +176,10 @@ exports.refresh = function() {
         }
 
         updateTable();
-    }).then(null, function(e) {console.error(e);})
+    }).then(null, function(e) {console.error(e);});
 }
 
 exports.setup = function() {
+    $("#btn-refresh").on('click', exports.refresh);
+    $("#btn-judge").on('click', onJudge);
 }

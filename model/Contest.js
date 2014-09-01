@@ -11,9 +11,9 @@ var Problem = require('./Problem');
 function Contest() {
     events.EventEmitter.call(this);
 
-    this.title = null;
+    this.title = '';
     this.version = CONST.VERSION;
-    this._path = null;
+    this._path = '';
     this._isOpened = false;
     this._problem = [];
     this._dataFileList = [];

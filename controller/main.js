@@ -33,10 +33,3 @@ global.contest.on('open succeeded', function() {
 })
 
 nav.setup('Contest');
-
-//Test Code:
-global.contest.open('/Users/abcdabcd987/Developer/tmp/test_contest').then(function() {
-    $("#wrap").html(template.mainTabContestants());
-    require('./controller/main-tab-contestants').setup();
-    require('./controller/main-tab-contestants').refresh();
-})

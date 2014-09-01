@@ -2,11 +2,11 @@ var Point = require('./Point');
 var CONST = require('../const');
 
 function Result() {
-    this.uuid     = null;
-    this.title    = null;
-    this.status   = null;
-    this.detail   = null;
-    this.filename = null;
+    this.uuid     = '';
+    this.title    = '';
+    this.status   = '';
+    this.detail   = '';
+    this.filename = '';
     this._point   = [];
 }
 
