@@ -1,3 +1,5 @@
+var path = require('path');
+
 module.exports = {
     VERSION: '0.0.1',
 
@@ -18,7 +20,6 @@ module.exports = {
         AC             : 'accepted',
         WA             : 'wrong answer',
         RE             : 'runtime error',
-        CE             : 'compilation error',
         MLE            : 'memory limit exceeded',
         TLE            : 'time limit exceeded',
         PART_CORRECT   : 'partly correct',
@@ -27,10 +28,16 @@ module.exports = {
         NO_OUTPUT      : 'no output file',
         NO_STD_INPUT   : 'no standard input file',
         NO_STD_OUTPUT  : 'no standard output file',
+        UNKNOWN        : 'unknown',
     },
 
     PERSON: {
         UNJUDGED : 'unjudged',
         JUDGED   : 'judged',
+    },
+
+    BIN: {
+        TRACKER      : path.join(__dirname, 'bin', 'tracker'),
+        NORMAL_JUDGE : path.join(__dirname, 'bin', 'normal_judge'),
     }
 };

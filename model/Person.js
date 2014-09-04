@@ -46,6 +46,16 @@ Person.prototype.getResult = function(index) {
     return this._result[index];
 }
 
+Person.prototype.updateResult = function(r) {
+    for (var i = 0; i < this._result.length; ++i) {
+        if (this._result[i].uuid === r) {
+            this._result[i] = r;
+            return;
+        }
+    }
+    
+}
+
 Person.prototype.resultCount = function() {
     return this._result.length;
 }

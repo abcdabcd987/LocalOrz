@@ -5,6 +5,7 @@ function Point() {
     this.time     = 0;
     this.memory   = 0;
     this.exitcode = 0;
+    this.signal   = '';
     this.stderr   = '';
 }
 

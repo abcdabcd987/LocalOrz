@@ -12,14 +12,14 @@ exports.setup = function() {
     nconf.set('data:timeLimit', 1000);
     nconf.set('data:memoryLimit', 131072);
 
-    nconf.set('compiler:pas:compile', 'fpc %s -o %s.exe');
-    nconf.set('compiler:pas:execute', './%s.exe');
+    nconf.set('compiler:pas:compile', 'fpc %s.pas -o %s');
+    nconf.set('compiler:pas:execute', '%s');
 
-    nconf.set('compiler:c:compile', 'gcc %s -o %s.exe');
-    nconf.set('compiler:c:execute', './%s.exe');
+    nconf.set('compiler:c:compile', 'gcc %s.c -o %s');
+    nconf.set('compiler:c:execute', '%s');
 
-    nconf.set('compiler:cpp:compile', 'g++ %s -o %s.exe');
-    nconf.set('compiler:cpp:execute', './%s.exe');
+    nconf.set('compiler:cpp:compile', 'g++ %s.cpp -o %s');
+    nconf.set('compiler:cpp:execute', '%s');
 
     nconf.save();
 };
