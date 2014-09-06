@@ -122,6 +122,25 @@ Contest.prototype.delProblem = function(index) {
     --this._problem.length;
 }
 
+Contest.prototype.delProblemByUUID = function(uuid) {
+    for (var i = 0; i < this._problem.length; ++i) {
+        if (this._problem[i].uuid === uuid) {
+            this.delProblem(i);
+            return true;
+        }
+    }
+    return false;
+}
+
+Contest.prototype.getProblemByUUID = function(uuid) {
+    for (var i = 0; i < this._problem.length; ++i) {
+        if (this._problem[i].uuid === uuid) {
+            return this._problem[i];
+        }
+    }
+    return null;
+}
+
 Contest.prototype.problemCount = function() {
     return this._problem.length;
 };

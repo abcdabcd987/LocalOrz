@@ -26,6 +26,9 @@ void dochild(void)
   LIM.rlim_max = LIM.rlim_cur;
   setrlimit(RLIMIT_CPU, &LIM);
 
+  fclose(stdin);
+  fclose(stdout);
+
   execl(executable, executable, (char *)0);
   exit(100);
 }
@@ -64,7 +67,7 @@ int main(int argc, char* argv[])
   // argv[3]: memory limit (kb)
   if (argc != 4) exit(1);
 
-  sprintf(executable, "./%s", argv[1]);
+  sprintf(executable, "%s", argv[1]);
   sscanf(argv[2], "%d", &time_limit);
   sscanf(argv[3], "%d", &memory_limit);
   if ((pid = fork()) != 0) {

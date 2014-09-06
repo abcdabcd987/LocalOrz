@@ -1,6 +1,7 @@
 var utils = require('../utils');
 var CONST = require('../CONST');
 var template = require('./template');
+var Executor = require('../judge/Executor');
 
 exports.show = function(name) {
     if (!(name in contestants)) return;
@@ -32,7 +33,9 @@ exports.show = function(name) {
             e.preventDefault();
             e.stopPropagation();
 
-            //TODO here
+            var problem = $(this).data('problem');
+            var task = new Executor(person, contest.getProblemByUUID(problem), JudgeQueue);
+            JudgeQueue.enqueue(task);
         });
     
         node.find('a[href="#detail"]').on('click', function(e) {
@@ -63,10 +66,13 @@ exports.show = function(name) {
     
         $(w.document.head).find('title').text(person._name);
         $(w.document.body).html(node);
+        win.focus();
+
+        //win.showDevTools();
     });
 
     win.on('close', function() {
         delete showingPerson[name];
         this.close(true);
-    })
+    });
 }

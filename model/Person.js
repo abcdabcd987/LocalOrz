@@ -48,7 +48,7 @@ Person.prototype.getResult = function(index) {
 
 Person.prototype.updateResult = function(r) {
     for (var i = 0; i < this._result.length; ++i) {
-        if (this._result[i].uuid === r) {
+        if (this._result[i].uuid === r.uuid) {
             this._result[i] = r;
             return;
         }

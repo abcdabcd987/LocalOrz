@@ -10,6 +10,7 @@ var nav = require('./controller/nav');
 
 global.gui = require('nw.gui');
 require('./model/Settings').setup();
+require('./judge/JudgeQueue');
 
 global.$ = $;
 global.contest = new Contest;
@@ -32,4 +33,9 @@ global.contest.on('open succeeded', function() {
     nav.setup('Problems');
 })
 
+
+
 nav.setup('Contest');
+
+//Test Code:
+global.contest.open('/Users/abcdabcd987/Developer/tmp/test_contest');
