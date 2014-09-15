@@ -1,0 +1,130 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+body {
+    padding-top: 60px;
+}
+
+#nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+}
+
+.main-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-top: 70px;
+}
+
+.display-block {
+    display: block !important;
+}
+
+#alert {
+    display: none;
+}
+
+#modification {
+    position: fixed;
+    left: 25%;
+}
+
+#problem-list .problem-title {
+    padding-left: 10px;
+    font-weight: bold;
+}
+
+#problem-list .testcase-title {
+    padding-left: 20px;
+}
+
+#problem-list .panel-body {
+    padding: 0;
+}
+
+#problem-list .panel-body .list-group {
+    margin: -1px;
+}
+
+#problem-list .panel-body .list-group .list-group-item:first-child {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+#problem-list .panel-body .list-group .list-group-item:last-child {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#compilers-settings input {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+#contestants-table {
+    margin-bottom: 50px;
+}
+
+#contestants-table-body tr td {
+    padding-top: 6px;
+    padding-bottom: 5px;
+}
+
+#contestants-table-body tr.selected {
+    background-color: #5c2040;
+}
+
+#contestants-table-body tr.current {
+    border: solid 1px #AD451D;
+}
+
+#contestants-table-body tr.current td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.progressbar {
+    background-color: #444444;
+    height: 21px;
+}
+
+.progressbar-bar {
+    font-size: 13px;
+    line-height: 21px;
+    background-color: #00bc8c;
+    position: relative;
+    height: 100%; 
+}
+
+.progressbar-text {
+    position: relative;
+    top: -21px;
+    left: 5px;
+    color: #fff;
+}
+
+#contestants-button-box {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 7px;
+    background-color: #333;
+    z-index: 1030;
+}

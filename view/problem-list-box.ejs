@@ -1,0 +1,10 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="list-group">
+      <a href="#" class="list-group-item list-group-item-warning problem-title" data-problem="<%= id %>"><%= problem.title %></a>
+      <% for (var j = 0; j < problem._testcase.length; ++j) { %>
+        <a href="#" class="list-group-item testcase-title" data-problem="<%= id %>" data-testcase="<%= j %>">Testcase <%= j+1 %></a>
+      <% } %>
+    </div>
+  </div>
+</div>

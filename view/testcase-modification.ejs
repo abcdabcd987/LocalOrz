@@ -1,0 +1,47 @@
+<div class="page-header">
+  <h1>Testcase <%= tid+1 %> <small id="problem-header-title">of <%= problem.title %></small></h1>
+</div>
+<form class="form-horizontal" role="form">
+  <input type="hidden" id="pid" value="<%= pid %>">
+  <input type="hidden" id="tid" value="<%= tid %>">
+  <div class="form-group">
+    <label for="input" class="col-xs-4 control-label">Input File</label>
+    <div class="col-xs-8">
+      <input type="text" class="form-control typeahead" id="input" placeholder="e.g. fibonacci/fibonacci8.in" value="<%= testcase.input %>">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="answer" class="col-xs-4 control-label">Answer File</label>
+    <div class="col-xs-8">
+      <input type="text" class="form-control typeahead" id="answer" placeholder="e.g. fibonacci/fibonacci8.out" value="<%= testcase.answer %>">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="score" class="col-xs-4 control-label">Full Score</label>
+    <div class="col-xs-8">
+      <input type="text" class="form-control" id="score" placeholder="e.g. 10" value="<%= testcase.score %>">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="time" class="col-xs-4 control-label">Time Limit</label>
+    <div class="col-xs-8">
+      <div class="input-group">
+        <input type="text" class="form-control" id="time" placeholder="e.g. 1000" value="<%= testcase.time %>">
+        <div class="input-group-addon">ms</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="memory" class="col-xs-4 control-label">Memory Limit</label>
+    <div class="col-xs-8">
+      <div class="input-group">
+        <input type="text" class="form-control" id="memory" placeholder="e.g. 131072" value="<%= testcase.memory %>">
+        <div class="input-group-addon">KB</div>
+      </div>
+    </div>
+  </div>
+</form>

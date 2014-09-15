@@ -1,0 +1,13 @@
+<tr data-name="<%= person._name %>">
+  <td data-value="<%= person._name %>"><%= person._name %></td>
+  <td data-value="<%= person._rank %>"><%= person._rank %></td>
+  <td data-value="<%= -person.score %>">
+    <div class="progressbar">
+      <div class="progressbar-bar" style="width: <%= person.score / totalScore * 100 %>%;">
+      </div>
+      <span class="progressbar-text"><%= person.score %></span>
+    </div>
+  </td>
+  <td data-value="<%= person.time %>"><%= Number(person.time/1000).toFixed(2).toLocaleString('en-US') %> s</td>
+  <td data-value="<%= statusToString[person._status] %>"><%= statusToString[person._status] %></td>
+</tr>

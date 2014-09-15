@@ -1,0 +1,24 @@
+{
+  "name": "LocalOrz",
+  "version": "0.0.1",
+  "description": "A simple local judge system for OI on Windows / Linux / OS X, in order to take place of Cena.",
+  "main": "main.html",
+  "single-instance": true,
+  "author": "Lequn Chen",
+  "license": "MIT",
+  "window": {
+    "min_width": 790,
+    "min_height": 400,
+    "width": 960,
+    "height": 640,
+    "position": "mouse"
+  },
+  "dependencies": {
+    "ejs": "^1.0.0",
+    "fs-extra": "^0.11.1",
+    "nconf": "^0.6.9",
+    "node-uuid": "^1.4.1",
+    "promise": "^5.0.0",
+    "walkdir": "0.0.7"
+  }
+}

@@ -1,0 +1,51 @@
+<table class="table table-condensed" id="contestants-table">
+  <thead>
+    <tr>
+      <th id="thead-name"><a href="#sort" data-type="string">Name</a></th>
+      <th id="thead-rank"><a href="#sort" data-type="number">Rank</a></th>
+      <th id="thead-score"><a href="#sort" data-type="number">Total Score</a></th>
+      <th id="thead-time"><a href="#sort" data-type="number">Time</a></th>
+      <th id="thead-status"><a href="#sort" data-type="string">Status</a></th>
+    </tr>
+  </thead>
+  <tbody id="contestants-table-body">
+  </tbody>
+</table>
+<div id="contestants-button-box">
+  <button type="button" class="btn btn-success" id="btn-refresh">Refresh</button>
+  <button type="button" class="btn btn-primary disabled" id="btn-judge">Judge</button>
+</div>
+
+<script>
+var sort_key = -1;
+var sort_order = null;
+var sort_type = null;
+var cmp = function(lhs, rhs) {
+  var l = lhs.children[sort_key].dataset.value;
+  var r = rhs.children[sort_key].dataset.value;
+  var res = NaN;
+  if (sort_type === 'number') {
+    res = Number(l) - Number(r);
+  } else if (sort_type === 'string') {
+    res = l.localeCompare(r);
+  }
+  return res * sort_order;
+}
+$('a[href="#sort"]').on('click', function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+
+  var key = $('a[href="#sort"]').index($(this));
+  if (key === sort_key) {
+    sort_order = -sort_order;
+  } else {
+    sort_key = key;
+    sort_order = 1;
+  }
+  sort_type = $(this).data("type");
+
+  var arr = $("#contestants-table-body tr").clone(true);
+  arr.sort(cmp);
+  $("#contestants-table-body").html(arr);
+})
+</script>

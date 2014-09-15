@@ -1,0 +1,62 @@
+<div class="page-header">
+  <h1>Data Defaults</h1>
+</div>
+<form class="form-horizontal" role="form" id="defaults-settings">
+  <div class="form-group">
+    <label for="full-score" class="col-xs-4 control-label">Default Full Score</label>
+    <div class="col-xs-8">
+      <input type="number" class="form-control" id="full-score" placeholder="e.g. 10" value="<%= data.fullScore %>">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="time-limit" class="col-xs-4 control-label">Default Time Limit</label>
+    <div class="col-xs-8">
+      <div class="input-group">
+        <input type="number" class="form-control" id="time-limit" placeholder="e.g. 1000" value="<%= data.timeLimit %>">
+        <div class="input-group-addon">ms</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="memory-limit" class="col-xs-4 control-label">Default Memory Limit</label>
+    <div class="col-xs-8">
+      <div class="input-group">
+        <input type="number" class="form-control" id="memory-limit" placeholder="e.g. 131072" value="<%= data.memoryLimit %>">
+        <div class="input-group-addon">KB</div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="page-header">
+  <h1>Compilers</h1>
+</div>
+<form class="form-horizontal" role="form" id="compilers-settings">
+  <div class="container-fluid">
+    <div class="form-group" id="compilers-thead">
+      <div class="col-xs-2">Extension</div>
+      <div class="col-xs-6">Compile Command</div>
+      <div class="col-xs-3">Execute Command</div>
+      <div class="col-xs-1"> </div>
+    </div>
+  </div>
+  <hr>
+  <div class="container-fluid">
+    <div class="form-group" id="new-compiler">
+      <div class="col-xs-2">
+        <input type="text" class="form-control extension" placeholder="e.g. pas">
+      </div>
+      <div class="col-xs-6">
+        <input type="text" class="form-control compile" placeholder="e.g. fpc %s -o %s.exe">
+      </div>
+      <div class="col-xs-3">
+        <input type="text" class="form-control execute" placeholder="e.g. %s.exe">
+      </div>
+      <div class="col-xs-1">
+        <button class="btn btn-primary add"><span class="glyphicon glyphicon-plus"></span> </button>
+      </div>
+    </div>
+  </div>
+</form>
